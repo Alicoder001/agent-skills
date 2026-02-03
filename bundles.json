@@ -1,0 +1,119 @@
+{
+  "$schema": "https://skills.sh/schemas/bundles.json",
+  "name": "agent-skills",
+  "version": "3.0.0",
+  "author": "Alicoder001",
+  "structure": "nested",
+  "bundles": {
+    "essential": {
+      "name": "Essential",
+      "description": "Core skills every developer needs",
+      "required": true,
+      "skills": [
+        "core/global-config",
+        "core/typescript",
+        "core/git",
+        "core/solid",
+        "core/errors"
+      ]
+    },
+    "frontend": {
+      "name": "Frontend Developer",
+      "description": "Complete React/Next.js toolkit",
+      "includes": ["essential"],
+      "skills": [
+        "core/validation",
+        "frontend/react-core",
+        "frontend/react-nextjs",
+        "frontend/react-vite",
+        "frontend/react-hooks",
+        "frontend/design",
+        "frontend/tailwind",
+        "frontend/shadcn",
+        "frontend/forms",
+        "frontend/tanstack-query",
+        "frontend/zustand",
+        "frontend/redux",
+        "perf/javascript"
+      ]
+    },
+    "backend": {
+      "name": "Backend Developer",
+      "description": "NestJS and API toolkit",
+      "includes": ["essential"],
+      "skills": [
+        "core/validation",
+        "core/security",
+        "core/testing",
+        "backend/nestjs",
+        "backend/api-patterns"
+      ]
+    },
+    "fullstack": {
+      "name": "Full Stack Developer",
+      "description": "Frontend + Backend + Infrastructure",
+      "includes": ["frontend", "backend"],
+      "skills": [
+        "infra/monorepo",
+        "agent/workflow"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Large-scale DDD architecture",
+      "includes": ["fullstack"],
+      "skills": [
+        "arch/enterprise-ddd",
+        "agent/senior"
+      ]
+    },
+    "agent": {
+      "name": "AI Agent Tools",
+      "description": "Agent behavior and workflows",
+      "skills": [
+        "agent/senior",
+        "agent/workflow",
+        "agent/find-skills",
+        "agent/project-init",
+        "agent/skill-update"
+      ]
+    }
+  },
+  "categories": {
+    "core": {
+      "name": "Core",
+      "description": "Foundation skills",
+      "skills": ["global-config", "typescript", "git", "solid", "errors", "validation", "security", "testing"]
+    },
+    "frontend": {
+      "name": "Frontend",
+      "description": "React and UI skills",
+      "skills": ["react-core", "react-nextjs", "react-vite", "react-hooks", "design", "tailwind", "shadcn", "forms", "tanstack-query", "zustand", "redux"]
+    },
+    "backend": {
+      "name": "Backend",
+      "description": "Server-side skills",
+      "skills": ["nestjs", "api-patterns"]
+    },
+    "arch": {
+      "name": "Architecture",
+      "description": "Enterprise architecture",
+      "skills": ["enterprise-ddd"]
+    },
+    "infra": {
+      "name": "Infrastructure",
+      "description": "DevOps and tooling",
+      "skills": ["monorepo"]
+    },
+    "perf": {
+      "name": "Performance",
+      "description": "Optimization skills",
+      "skills": ["javascript"]
+    },
+    "agent": {
+      "name": "Agent",
+      "description": "AI agent behavior",
+      "skills": ["senior", "workflow", "find-skills", "project-init", "skill-update"]
+    }
+  }
+}
