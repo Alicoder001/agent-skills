@@ -1,0 +1,70 @@
+﻿{
+  "repo": "Alicoder001/agent-skills",
+  "mandatory": ["global-config", "typescript", "git", "errors"],
+  "choices": {
+    "frontend": {
+      "label": "Frontend",
+      "options": {
+        "nextjs": ["react-core", "react-nextjs"],
+        "vite": ["react-core", "react-vite"],
+        "none": []
+      }
+    },
+    "state": {
+      "label": "State",
+      "options": {
+        "tanstack": ["tanstack-query"],
+        "zustand": ["zustand"],
+        "redux": ["redux"],
+        "none": []
+      }
+    },
+    "ui": {
+      "label": "UI",
+      "options": {
+        "tailwind": ["tailwind"],
+        "shadcn": ["shadcn"],
+        "none": []
+      }
+    },
+    "backend": {
+      "label": "Backend",
+      "options": {
+        "nestjs": ["nestjs", "api-patterns", "security"],
+        "express": ["api-patterns", "security"],
+        "none": []
+      }
+    },
+    "testing": {
+      "label": "Testing",
+      "options": {
+        "yes": ["testing"],
+        "no": []
+      }
+    },
+    "design": {
+      "label": "Design",
+      "options": {
+        "yes": ["design"],
+        "no": []
+      }
+    },
+    "arch": {
+      "label": "Architecture",
+      "options": {
+        "monorepo": ["monorepo"],
+        "enterprise": ["enterprise-ddd"],
+        "none": []
+      }
+    }
+  },
+  "selections": {
+    "frontend": "nextjs",
+    "state": "tanstack",
+    "ui": "tailwind",
+    "backend": "nestjs",
+    "testing": "yes",
+    "design": "yes",
+    "arch": "monorepo"
+  }
+}
