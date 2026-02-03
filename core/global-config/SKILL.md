@@ -14,6 +14,19 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 - Confirm constraints that affect output (stack, environment, timeline).
 - Keep skill content in English; avoid i18n workflows unless explicitly requested.
 
+## Project Initialization Trigger
+
+At the start of a new project, ask once:
+
+```
+Do you want guided setup to generate project config (.agents/CONTEXT.md)?
+1) Yes (ask setup questions)
+2) No (skip for now)
+```
+
+If the user chooses **Yes**, use `project-init` to run the questionnaire.
+If the user chooses **No**, skip questions and continue with the task.
+
 ## Global Rules
 
 ### Code Style
