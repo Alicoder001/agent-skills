@@ -16,7 +16,17 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 
 ## Project Initialization Trigger
 
-At the start of a new project, ask once:
+Only ask the guided setup **once per project**, and **only if project context is missing**.
+Before asking, check for any of these local files:
+
+- `.agents/CONTEXT.md`
+- `AGENTS.md`
+- `skills.config.json`
+
+If any exist, **do not** ask setup questions and **do not** ask for project language/goal.
+Use the existing context and continue with the task.
+
+If none exist, ask once:
 
 ```
 Do you want guided setup to generate project config (.agents/CONTEXT.md)?
