@@ -41,6 +41,10 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 3. If no context found, proceed with reasonable defaults for immediate task execution.
 4. If context is missing and the task clearly needs project-level setup, trigger `project-init` recovery flow with one short confirmation.
 
+**Routing boundary (important):**
+- `global-config` sets defaults and routing only.
+- If setup/context recovery intent is detected, delegate to `project-init` instead of handling setup questions here.
+
 > **Rule**: If you cannot detect, proceed with the task. Do not block.
 
 ## Language Policy
@@ -84,14 +88,15 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 
 When multiple skills apply, follow this order:
 
-1. **global-config** (this) - Always first
-2. **agent/reasoning** - Before any complex task
-3. **agent/planning** - For task decomposition
-4. **core/** skills - Foundation
-5. **arch/** skills - Architecture decisions
-6. **frontend/** or **backend/** - Implementation
-7. **perf/** - Optimization
-8. **agent/** - Other agent behaviors
+1. **project-init** - First only for setup/context recovery intent
+2. **global-config** - Baseline defaults and routing guardrails
+3. **agent/reasoning** - Before any complex task
+4. **agent/planning** - For task decomposition
+5. **core/** skills - Foundation
+6. **arch/** skills - Architecture decisions
+7. **frontend/** or **backend/** - Implementation
+8. **perf/** - Optimization
+9. **agent/** - Other agent behaviors
 
 ---
 

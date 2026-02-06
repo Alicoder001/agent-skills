@@ -16,6 +16,16 @@ description: Project setup wizard for AI agents. Use when user requests setup or
 5. If first user message is non-English, ask one language confirmation question.
 6. If `.agents/CONTEXT.md` has checklist and `CONTEXT_READY` is checked, skip analysis and only confirm whether updates are needed.
 
+## Hard Trigger Policy
+
+Trigger `project-init` with high priority when one of these is true:
+
+1. User explicitly asks setup/init/context generation.
+2. User says `.agents/CONTEXT.md` is missing, deleted, empty, outdated, or needs regeneration.
+3. User asks to remap skills from scratch for the project.
+
+Do not stay only in `global-config` when the request matches this policy.
+
 ## Workflow
 
 ### Step 0: Conversation Language

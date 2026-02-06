@@ -20,7 +20,8 @@ function normalizeText(value) {
     .replace(/next\.js/g, 'nextjs')
     .replace(/rtk query/g, 'rtk-query')
     .replace(/tanstack query/g, 'tanstack-query')
-    .replace(/[^a-z0-9-]+/g, ' ')
+    .replace(/[’']/g, '')
+    .replace(/[^\p{L}\p{N}-]+/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -88,6 +89,26 @@ function scoreSkill(prompt, skill) {
   const promptTokens = new Set(tokenize(prompt));
   const normalizedPrompt = normalizeText(prompt);
   let score = 0;
+  const projectInitIntentSignals = [
+    'project init',
+    'setup project',
+    'initialize context',
+    'generate context md',
+    'regenerate context',
+    'recover context',
+    'context md was deleted',
+    'context file missing',
+    'agents context md',
+    'contextni qayta yarat',
+    'kontekstni qayta yarat',
+    'context ochib ketdi',
+    'context ochib tashladim',
+    'context ochirildi',
+    'context delete',
+    'context deleted',
+    'skilllarni qayta map'
+  ];
+  const hasProjectInitIntent = projectInitIntentSignals.some((signal) => normalizedPrompt.includes(signal));
 
   for (const token of skill.nameTokens) {
     if (promptTokens.has(token)) {
@@ -116,6 +137,15 @@ function scoreSkill(prompt, skill) {
     ];
     if (recoverySignals.some((signal) => normalizedPrompt.includes(signal))) {
       score += 6;
+    }
+  }
+
+  if (hasProjectInitIntent) {
+    if (skill.name === 'project-init') {
+      score += 20;
+    }
+    if (skill.name === 'global-config') {
+      score -= 2;
     }
   }
 

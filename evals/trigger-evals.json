@@ -8,6 +8,12 @@
     { "id": "agent-planning", "prompt": "Break this complex implementation into sequenced steps with adaptive checkpoints.", "expected": "planning" },
     { "id": "agent-project-init", "prompt": "Initialize a new repo context file with baseline defaults for this project.", "expected": "project-init" },
     { "id": "agent-project-init-recovery", "prompt": "I deleted .agents/CONTEXT.md by mistake, recover setup context and remap required skills.", "expected": "project-init" },
+    { "id": "agent-project-init-uz-recovery-1", "prompt": "contextni ochirib yubordim, .agents/CONTEXT.md ni qayta yaratib ber", "expected": "project-init" },
+    { "id": "agent-project-init-uz-recovery-2", "prompt": "kontekst fayli yoqolgan, boshidan setup qilib skilllarni qayta map qil", "expected": "project-init" },
+    { "id": "agent-project-init-en-recovery-1", "prompt": "CONTEXT.md is missing, bootstrap project context again and map required skills", "expected": "project-init" },
+    { "id": "agent-project-init-en-recovery-2", "prompt": "Regenerate .agents/CONTEXT.md and run setup recovery flow", "expected": "project-init" },
+    { "id": "agent-project-init-routing-1", "prompt": "Do project init, context is deleted and setup must be rebuilt", "expected": "project-init" },
+    { "id": "agent-project-init-routing-2", "prompt": "Only update global defaults later, first recover context and initialize project mapping", "expected": "project-init" },
     { "id": "agent-reasoning", "prompt": "Before coding, I need a structured reasoning approach to reduce wrong assumptions.", "expected": "reasoning" },
     { "id": "agent-senior", "prompt": "Review this frontend work for accessibility, responsiveness, and production-grade quality.", "expected": "senior" },
     { "id": "agent-skill-update", "prompt": "I changed an existing skill and need to align formatting, versioning, and changelog safely.", "expected": "skill-update" },
@@ -22,6 +28,8 @@
     { "id": "core-errors", "prompt": "Need resilient async error handling with clear API-safe responses and custom error structures.", "expected": "errors" },
     { "id": "core-git", "prompt": "Our team needs consistent conventional commit messages and cleaner commit history workflow.", "expected": "git" },
     { "id": "core-global-config", "prompt": "Set cross-task defaults for communication style, project assumptions, and skill priority.", "expected": "global-config" },
+    { "id": "core-global-config-routing-only-1", "prompt": "Define baseline communication and routing guardrails for all tasks in this session.", "expected": "global-config" },
+    { "id": "core-global-config-routing-only-2", "prompt": "Set global defaults for agent behavior, no setup wizard needed right now.", "expected": "global-config" },
     { "id": "core-security", "prompt": "Harden this app against common web vulnerabilities and improve secret handling practices.", "expected": "security" },
     { "id": "core-solid", "prompt": "Need clean architecture guidance using SOLID, DRY, and KISS for long-term maintainability.", "expected": "solid" },
     { "id": "core-testing", "prompt": "Define a practical testing strategy covering unit and integration layers with modern JS tools.", "expected": "testing" },
@@ -46,6 +54,7 @@
 
     { "id": "negative-unrelated-1", "prompt": "Write a poem about mountains and moonlight in three stanzas.", "expected": null },
     { "id": "negative-unrelated-2", "prompt": "Give a recipe for making tomato soup with basil.", "expected": null },
-    { "id": "negative-unrelated-3", "prompt": "Explain the history of ancient Rome in simple terms.", "expected": null }
+    { "id": "negative-unrelated-3", "prompt": "Explain the history of ancient Rome in simple terms.", "expected": null },
+    { "id": "negative-unrelated-4", "prompt": "What are the best stretches after running?", "expected": null }
   ]
 }
