@@ -14,28 +14,33 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 - Confirm constraints that affect output (stack, environment, timeline).
 - Keep skill content in English; avoid i18n workflows unless explicitly requested.
 
-## Project Initialization Trigger
+## Project Context Detection
 
-Only ask the guided setup **once per project**, and **only if project context is missing**.
-Before asking, check for any of these local files:
+**NEVER ask these questions:**
+- ❌ "What language do you prefer?"
+- ❌ "What programming language?"
+- ❌ "What is your tech stack?"
+- ❌ "Do you want guided setup?"
+- ❌ "What framework are you using?"
 
-- `.agents/CONTEXT.md`
-- `AGENTS.md`
-- `skills.config.json`
+**Instead, auto-detect from these files:**
 
-If any exist, **do not** ask setup questions and **do not** ask for project language/goal.
-Use the existing context and continue with the task.
+| File | What to Detect |
+|------|----------------|
+| `package.json` | Dependencies, scripts, framework |
+| `tsconfig.json` | TypeScript project |
+| `.agents/CONTEXT.md` | Full project context |
+| `GEMINI.md` | Agent rules |
+| `next.config.*` | Next.js project |
+| `vite.config.*` | Vite project |
+| `nest-cli.json` | NestJS project |
 
-If none exist, ask once:
+**Detection logic:**
+1. Check if context files exist → Use them silently
+2. Check package.json dependencies → Infer stack
+3. No context found → Proceed with task, make reasonable assumptions
 
-```
-Do you want guided setup to generate project config (.agents/CONTEXT.md)?
-1) Yes (ask setup questions)
-2) No (skip for now)
-```
-
-If the user chooses **Yes**, use `project-init` to run the questionnaire.
-If the user chooses **No**, skip questions and continue with the task.
+> **Rule**: If you cannot detect, proceed with the task. Do NOT ask the user.
 
 ## Global Rules
 
@@ -66,11 +71,13 @@ If the user chooses **No**, skip questions and continue with the task.
 When multiple skills apply, follow this order:
 
 1. **global-config** (this) - Always first
-2. **core/** skills - Foundation
-3. **arch/** skills - Architecture decisions
-4. **frontend/** or **backend/** - Implementation
-5. **perf/** - Optimization
-6. **agent/** - Agent behavior
+2. **agent/reasoning** - Before any complex task
+3. **agent/planning** - For task decomposition
+4. **core/** skills - Foundation
+5. **arch/** skills - Architecture decisions
+6. **frontend/** or **backend/** - Implementation
+7. **perf/** - Optimization
+8. **agent/** - Other agent behaviors
 
 ---
 

@@ -71,11 +71,30 @@
       "name": "AI Agent Tools",
       "description": "Agent behavior and workflows",
       "skills": [
+        "agent/reasoning",
+        "agent/planning",
+        "agent/memory",
+        "agent/tools",
+        "agent/collaboration",
         "agent/senior",
         "agent/workflow",
         "agent/find-skills",
         "agent/project-init",
         "agent/skill-update"
+      ]
+    },
+    "agent-professional": {
+      "name": "Professional Agent",
+      "description": "Complete AI agent capabilities for advanced workflows",
+      "includes": ["essential"],
+      "skills": [
+        "agent/reasoning",
+        "agent/planning",
+        "agent/memory",
+        "agent/tools",
+        "agent/collaboration",
+        "agent/workflow",
+        "agent/senior"
       ]
     }
   },
@@ -113,7 +132,7 @@
     "agent": {
       "name": "Agent",
       "description": "AI agent behavior",
-      "skills": ["senior", "workflow", "find-skills", "project-init", "skill-update"]
+      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "senior", "workflow", "find-skills", "project-init", "skill-update"]
     }
   }
 }

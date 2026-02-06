@@ -23,7 +23,33 @@ Never modify or include in context:
 - Generated files
 ```
 
-### 2. Navigation-First Workflow
+### 2. Reasoning Protocol (NEW)
+
+Before executing any task, follow this mental process:
+
+```
+1. UNDERSTAND: What is the goal?
+   - Read the request carefully
+   - Identify explicit and implicit requirements
+
+2. PLAN: What steps are needed?
+   - Break into subtasks
+   - Identify dependencies
+
+3. EXECUTE: Implement step by step
+   - One subtask at a time
+   - Verify each step
+
+4. VERIFY: Check the result
+   - Does it meet requirements?
+   - Any edge cases missed?
+
+5. REFLECT: What could be improved?
+   - Learn from mistakes
+   - Note patterns for future
+```
+
+### 3. Navigation-First Workflow
 
 ```
 1. Understand the request

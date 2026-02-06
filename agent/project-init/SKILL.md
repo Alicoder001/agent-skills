@@ -1,309 +1,261 @@
 ﻿---
 name: project-init
-description: Project setup wizard for AI agents. Use when starting a new project to ask about stack and constraints, then generate .agents/CONTEXT.md with recommended skills, folder structure, and coding rules tailored to the project.
+description: Project setup wizard for AI agents. Use ONLY when user explicitly requests setup. Generates .agents/CONTEXT.md with stack, structure, and coding rules.
 ---
 
 # Project Init Wizard
 
-> Interactive project setup with intelligent skill selection.
+> Run ONLY when user explicitly requests: "Setup project", "Initialize context", "Generate CONTEXT.md"
 
-## Wizard Flow
+## ⚠️ Important Rules
 
-```mermaid
-flowchart TD
-    A[Start] --> B[Guided setup?]
-    B -->|Yes| C[Project Type?]
-    B -->|No| I[Generate minimal CONTEXT.md]
-    C --> D[Framework?]
-    D --> E[State Management?]
-    E --> F[Backend?]
-    F --> G[Database?]
-    G --> H[Architecture?]
-    H --> I[Generate CONTEXT.md]
-    I --> J[Suggest skills install commands]
-```
+1. **NEVER run automatically** - Only when user explicitly asks
+2. **NEVER ask on every chat** - One-time setup only
+3. **Ask questions ONE BY ONE** - Not all at once
 
 ---
 
-## Questions to Ask
+## Question Flow
 
-### Dynamic Start (Required)
-Before asking the full questionnaire, ask once:
+Ask questions in this EXACT format:
 
+### Step 1: Project Name
 ```
-Do you want to answer a few setup questions to generate project config?
-1) Yes (guided setup)
-2) No (skip questions)
+What is your project name?
 ```
+*(Wait for text answer)*
 
-If the user chooses **No**, do not ask further questions and instead:
-- Generate a minimal `.agents/CONTEXT.md` with only project name and a short note.
-- Suggest installing the Essential skills only.
+### Step 2: Project Type
+```
+What type of project?
 
-### Phase 1: Basic Info
-| # | Question | Options |
-|---|----------|---------|
-| 1 | Project name? | (text input) |
-| 2 | Project type? | Chat App, E-commerce, Admin Panel, Landing Page, SaaS, API Backend, Portfolio, Blog |
-| 3 | Monorepo? | Yes / No |
+1) SaaS Application
+2) E-commerce
+3) Admin Dashboard
+4) Landing Page
+5) API Backend
+6) Mobile App
+7) Portfolio/Blog
+8) Other
+```
+*(Wait for number answer: 1-8)*
 
-### Phase 2: Frontend
-| # | Question | Options |
-|---|----------|---------|
-| 4 | Frontend framework? | Next.js 14+, Vite + React, Remix, None (API only) |
-| 5 | TypeScript? | Yes / No |
-| 6 | UI Library? | Tailwind CSS, shadcn/ui, MUI, Ant Design, Chakra UI, None |
-| 7 | State management? | TanStack Query, Zustand, Redux Toolkit, Jotai, None |
+### Step 3: Frontend Framework
+```
+Which frontend framework?
 
-### Phase 3: Backend
-| # | Question | Options |
-|---|----------|---------|
-| 8 | Backend framework? | NestJS, Express, Next.js API Routes, Hono, None |
-| 9 | Database? | PostgreSQL, MySQL, MongoDB, SQLite, Supabase, None |
-| 10 | ORM? | Prisma, Drizzle, TypeORM, Mongoose, None |
-| 11 | Authentication? | NextAuth, Clerk, Supabase Auth, JWT Custom, None |
+1) Next.js 14+ (App Router)
+2) Vite + React
+3) Remix
+4) None (API only)
+```
+*(Wait for number answer: 1-4)*
 
-### Phase 4: Architecture
-| # | Question | Options |
-|---|----------|---------|
-| 12 | Folder structure? | Feature-Sliced Design (FSD), Feature-based, Domain-Driven (DDD), Type-based (classic) |
-| 13 | Package manager? | pnpm, npm, yarn, bun |
-| 14 | Testing? | Vitest + RTL, Playwright, Jest, None |
-| 15 | Deployment? | Vercel, Railway, Docker, AWS, Self-hosted |
+### Step 4: TypeScript
+```
+Use TypeScript?
+
+1) Yes (recommended)
+2) No
+```
+*(Wait for number answer: 1-2)*
+
+### Step 5: UI Library
+```
+Which UI library?
+
+1) Tailwind CSS
+2) shadcn/ui + Tailwind
+3) MUI
+4) Ant Design
+5) None
+```
+*(Wait for number answer: 1-5)*
+
+### Step 6: State Management
+```
+State management?
+
+1) TanStack Query (server state)
+2) Zustand (client state)
+3) Redux Toolkit
+4) TanStack + Zustand (recommended)
+5) None
+```
+*(Wait for number answer: 1-5)*
+
+### Step 7: Backend
+```
+Backend framework?
+
+1) NestJS
+2) Express
+3) Next.js API Routes
+4) Hono
+5) None
+```
+*(Wait for number answer: 1-5)*
+
+### Step 8: Database
+```
+Database?
+
+1) PostgreSQL
+2) MySQL
+3) MongoDB
+4) SQLite
+5) Supabase
+6) None
+```
+*(Wait for number answer: 1-6)*
+
+### Step 9: ORM
+```
+ORM/Database client?
+
+1) Prisma (recommended)
+2) Drizzle
+3) TypeORM
+4) None
+```
+*(Wait for number answer: 1-4)*
+
+### Step 10: Package Manager
+```
+Package manager?
+
+1) pnpm (recommended)
+2) npm
+3) yarn
+4) bun
+```
+*(Wait for number answer: 1-4)*
 
 ---
 
-## Skill Mapping Table
+## Output Template
 
-Based on answers, select skills:
-
-### Frontend Mapping
-| Answer | Skills to Add |
-|--------|---------------|
-| Next.js 14+ | `react-core`, `react-nextjs` |
-| Vite + React | `react-core`, `react-vite` |
-| TanStack Query | `tanstack-query` |
-| Zustand | `zustand` |
-| Redux Toolkit | `redux` |
-| TypeScript: Yes | `typescript` |
-
-### Backend Mapping
-| Answer | Skills to Add |
-|--------|---------------|
-| NestJS | `nestjs` |
-| Any backend | `security`, `errors` |
-
-### Architecture Mapping
-| Answer | Skills to Add |
-|--------|---------------|
-| Monorepo: Yes | `monorepo` |
-| Testing: Yes | `testing` |
-| Any project | `git`, `workflow` |
-
-### Project Type Mapping
-| Project Type | Additional Skills |
-|--------------|-------------------|
-| Chat App | Real-time patterns, WebSocket |
-| E-commerce | Payment, cart patterns |
-| Admin Panel | Table, form patterns |
-| SaaS | Auth, subscription patterns |
-
----
-
-## Output: .agents/CONTEXT.md
-
-Generate this file in the project root:
+After collecting answers, generate `.agents/CONTEXT.md`:
 
 ```markdown
-# [Project Name] Context
+# {PROJECT_NAME} - Project Context
 
-> Auto-generated by agent-project-init skill
+> Auto-generated by project-init wizard
 
-## Technology Stack
+## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript (strict) |
-| Styling | Tailwind CSS + shadcn/ui |
-| State (Server) | TanStack Query |
-| State (Client) | Zustand |
-| Backend | NestJS |
-| Database | PostgreSQL |
-| ORM | Prisma |
-| Auth | NextAuth |
-| Package Manager | pnpm |
+| Category | Technology |
+|----------|------------|
+| Framework | {FRAMEWORK} |
+| Language | {LANGUAGE} |
+| Styling | {UI_LIBRARY} |
+| State | {STATE_MANAGEMENT} |
+| Backend | {BACKEND} |
+| Database | {DATABASE} |
+| ORM | {ORM} |
+| Package Manager | {PACKAGE_MANAGER} |
 
-## Installed Skills
+## Project Structure
 
-Run these commands to install recommended skills:
-
-\`\`\`bash
-# Core
-npx skills add Alicoder001/agent-skills --skill typescript
-npx skills add Alicoder001/agent-skills --skill git
-npx skills add Alicoder001/agent-skills --skill security
-npx skills add Alicoder001/agent-skills --skill errors
-
-# Frontend
-npx skills add Alicoder001/agent-skills --skill react-core
-npx skills add Alicoder001/agent-skills --skill react-nextjs
-npx skills add Alicoder001/agent-skills --skill tanstack-query
-npx skills add Alicoder001/agent-skills --skill zustand
-
-# Backend
-npx skills add Alicoder001/agent-skills --skill nestjs
-
-# Or install all at once:
-npx skills add Alicoder001/agent-skills
-\`\`\`
-
-## Project Structure (FSD)
-
-\`\`\`
+```
 src/
-â”œâ”€â”€ app/                    # Next.js App Router
-â”‚   â”œâ”€â”€ (auth)/            # Auth route group
-â”‚   â”œâ”€â”€ (dashboard)/       # Dashboard routes
-â”‚   â”œâ”€â”€ api/               # API routes
-â”‚   â””â”€â”€ layout.tsx
-â”œâ”€â”€ entities/              # Business entities
-â”‚   â”œâ”€â”€ user/
-â”‚   â””â”€â”€ product/
-â”œâ”€â”€ features/              # Feature modules
-â”‚   â”œâ”€â”€ auth/
-â”‚   â””â”€â”€ cart/
-â”œâ”€â”€ shared/                # Shared code
-â”‚   â”œâ”€â”€ ui/               # UI components
-â”‚   â”œâ”€â”€ lib/              # Utilities
-â”‚   â”œâ”€â”€ api/              # API client
-â”‚   â””â”€â”€ config/           # Configuration
-â”œâ”€â”€ widgets/               # Composite components
-â””â”€â”€ processes/             # Complex flows
-\`\`\`
+├── app/                # Pages/Routes
+├── components/
+│   ├── ui/            # Reusable UI components
+│   └── features/      # Feature-specific components
+├── hooks/             # Custom React hooks
+├── lib/               # Utilities and helpers
+├── types/             # TypeScript types
+└── styles/            # Global styles
+```
 
 ## Coding Rules
 
-### Components
-- Max 200 lines per component
-- One component per file
-- Use functional components only
-- Extract hooks to separate files
-
-### TypeScript
-- Strict mode enabled
-- No `any` type
-- Explicit return types for public APIs
-- Use `interface` for objects, `type` for unions
-
-### State Management
-- Server state -> TanStack Query
-- Client state -> Zustand
-- Form state -> React Hook Form
-- URL state -> Router params
-
-### Git Commits
-- Use conventional commits
-- Format: `type(scope): description`
-- Types: feat, fix, docs, style, refactor, test, chore
-
-### File Naming
-- Components: PascalCase (`UserCard.tsx`)
-- Hooks: camelCase with `use` prefix (`useAuth.ts`)
-- Utils: camelCase (`formatDate.ts`)
-- Types: PascalCase (`User.types.ts`)
+- Components: Max 200 lines
+- TypeScript: Strict mode, no `any`
+- Commits: Conventional format (feat, fix, docs)
+- Files: PascalCase for components, camelCase for utils
 
 ## Commands
 
-\`\`\`bash
-pnpm dev          # Development server
-pnpm build        # Production build
-pnpm lint         # Lint code
-pnpm test         # Run tests
-pnpm db:push      # Push DB schema
-pnpm db:studio    # Open Prisma Studio
-\`\`\`
-
-## Environment Variables
-
-\`\`\`bash
-# .env.local
-DATABASE_URL=postgresql://...
-NEXTAUTH_SECRET=xxx
-NEXTAUTH_URL=http://localhost:3000
-\`\`\`
+```bash
+{PACKAGE_MANAGER} dev        # Start dev server
+{PACKAGE_MANAGER} build      # Production build
+{PACKAGE_MANAGER} lint       # Run linter
+{PACKAGE_MANAGER} test       # Run tests
+```
 ```
 
 ---
 
-## Example Interaction
+## Skill Mapping
 
-**Agent:** Ready to set up your project. What's the project name?
+Based on answers, recommend skills:
 
-**User:** TaskManager
+| User Choice | Skills to Install |
+|-------------|-------------------|
+| Next.js | `react-core`, `react-nextjs` |
+| Vite | `react-core`, `react-vite` |
+| TypeScript: Yes | `typescript` |
+| Tailwind | `tailwind` |
+| shadcn/ui | `shadcn`, `tailwind` |
+| TanStack Query | `tanstack-query` |
+| Zustand | `zustand` |
+| Redux | `redux` |
+| NestJS | `nestjs`, `api-patterns` |
+| Any backend | `security`, `errors` |
+| Any project | `git`, `solid` |
 
-**Agent:** Great. What type of project is it?
-1. Chat App
-2. E-commerce
-3. Admin Panel
-4. SaaS
-5. API Backend
+---
 
-**User:** 4
+## Example Dialog
 
-**Agent:** SaaS it is. Which frontend framework?
-1. Next.js 14+
-2. Vite + React
-3. API only
+```
+User: Setup my project
 
-**User:** 1
+Agent: What is your project name?
 
-**Agent:** Any constraints I should account for? (performance, SEO, accessibility, deployment)
+User: TaskFlow
 
-**User:** SEO + Vercel
+Agent: What type of project?
+1) SaaS Application
+2) E-commerce
+3) Admin Dashboard
+4) Landing Page
+5) API Backend
+6) Mobile App
+7) Portfolio/Blog
+8) Other
 
-... (continues)
+User: 1
 
-**Agent:** Done. `.agents/CONTEXT.md` is generated. Install the recommended skills:
+Agent: Which frontend framework?
+1) Next.js 14+ (App Router)
+2) Vite + React
+3) Remix
+4) None (API only)
 
-```bash
+User: 1
+
+Agent: Use TypeScript?
+1) Yes (recommended)
+2) No
+
+User: 1
+
+... (continues through all questions)
+
+Agent: ✅ Created `.agents/CONTEXT.md`
+
+Recommended skills:
 npx skills add Alicoder001/agent-skills --skill typescript
 npx skills add Alicoder001/agent-skills --skill react-nextjs
 npx skills add Alicoder001/agent-skills --skill tanstack-query
-npx skills add Alicoder001/agent-skills --skill nestjs
-```
-
-### Minimal Output (Skip Questions)
-
-If the user skips the questionnaire, generate:
-
-```markdown
-# [Project Name] Context
-
-> Auto-generated by agent-project-init skill (minimal mode)
-
-## Notes
-- User skipped guided setup questions.
-- Stack and constraints not specified yet.
-```
-
-Then suggest only the Essential skills:
-
-```bash
-npx skills add Alicoder001/agent-skills --skill global-config
-npx skills add Alicoder001/agent-skills --skill typescript
-npx skills add Alicoder001/agent-skills --skill git
-npx skills add Alicoder001/agent-skills --skill solid
-npx skills add Alicoder001/agent-skills --skill errors
 ```
 
 ---
 
 ## References
 
-- [Alicoder001/agent-skills](https://github.com/Alicoder001/agent-skills)
 - [Feature-Sliced Design](https://feature-sliced.design/)
-- [skills.sh](https://skills.sh)
-
-
-
+- [Alicoder001/agent-skills](https://github.com/Alicoder001/agent-skills)
