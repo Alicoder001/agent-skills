@@ -50,7 +50,8 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 ## Language Policy
 
 - Do not ask a generic language preference question in normal task flow.
-- Exception: setup-style onboarding (for example `project-init`) may ask one language confirmation at the start when the first user message is non-English.
+- Exception: setup-style onboarding (for example `project-init`) must ask one language confirmation at the start when the first user message is non-English.
+- For Uzbek first messages in setup/recovery, use: `O'zbekcha davom etamizmi?`
 - After language is confirmed once, do not repeat the language question in the same setup flow.
 
 ## Global Rules

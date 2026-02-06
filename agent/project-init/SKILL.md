@@ -13,7 +13,7 @@ description: Project setup wizard for AI agents. Use when user requests setup or
 2. Ask one question at a time.
 3. Analyze local files before asking setup questions.
 4. Do not re-ask values that are already inferred with high confidence.
-5. If first user message is non-English, ask one language confirmation question.
+5. If first user message is non-English, ask one language confirmation question before any other setup question.
 6. If `.agents/CONTEXT.md` has checklist and `CONTEXT_READY` is checked, skip analysis and only confirm whether updates are needed.
 
 ## Hard Trigger Policy
@@ -30,7 +30,17 @@ Do not stay only in `global-config` when the request matches this policy.
 
 ### Step 0: Conversation Language
 
-Ask this only if first user message is non-English:
+Ask this only if first user message is non-English. This must be the first setup prompt.
+
+```text
+O'zbekcha davom etamizmi?
+
+1) Ha
+2) Yo'q (English)
+3) Boshqa til
+```
+
+Fallback template for other non-English languages:
 
 ```text
 Use {detected_language} for this setup conversation?
@@ -40,7 +50,7 @@ Use {detected_language} for this setup conversation?
 3) Other language
 ```
 
-If answer is `3`, ask: `Which language?`
+If answer is `3`, ask: `Qaysi tilda davom etamiz?` (or `Which language?` if user replies in English).
 
 ### Step A: Quick Analysis and Confirmation
 
