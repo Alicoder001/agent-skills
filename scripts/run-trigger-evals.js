@@ -82,13 +82,8 @@ function loadSkills() {
 }
 
 function scoreSkill(prompt, skill) {
-  const normalizedPrompt = normalizeText(prompt);
   const promptTokens = new Set(tokenize(prompt));
   let score = 0;
-
-  if (normalizedPrompt.includes(skill.name.toLowerCase())) {
-    score += 12;
-  }
 
   for (const token of skill.nameTokens) {
     if (promptTokens.has(token)) {

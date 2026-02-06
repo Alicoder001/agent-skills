@@ -1,6 +1,6 @@
 ﻿---
 name: find-skills
-description: Skill discovery and selection utility. Use to find relevant skills from the Alicoder001/agent-skills repository based on project needs and technology stack.
+description: Skill discovery and selection utility. Use when you need to find relevant skills from the Alicoder001/agent-skills repository based on project needs and technology stack.
 ---
 
 # Find Skills

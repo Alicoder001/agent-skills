@@ -1,6 +1,6 @@
 ---
 name: workflow
-description: AI agent operational rules including token discipline, navigation-first approach, and output contracts. Use to ensure efficient and predictable agent behavior during development tasks.
+description: AI agent operational rules including token discipline, navigation-first approach, and output contracts. Use when you need efficient and predictable agent behavior during development tasks.
 ---
 
 # Agent Workflow Rules

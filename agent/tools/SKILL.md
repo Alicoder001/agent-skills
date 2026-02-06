@@ -1,6 +1,6 @@
 ---
 name: tools
-description: Dynamic tool selection, composition, and error handling patterns for AI agents. Use to efficiently leverage available tools and handle failures gracefully.
+description: Dynamic tool selection, composition, and error handling patterns for AI agents. Use when you need to efficiently leverage available tools and handle failures gracefully.
 ---
 
 # Tool Usage Patterns

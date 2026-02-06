@@ -1,4 +1,4 @@
 version: 1
 display_name: "Find Skills"
-short_description: "Skill discovery and selection utility. Use to find relevant skills from the Alicoder001/agent-skills repository based on project needs an..."
-default_prompt: "Use this skill when: Skill discovery and selection utility. Use to find relevant skills from the Alicoder001/agent-skills repository based on project needs and technology stack."
+short_description: "Skill discovery and selection utility. Use when you need to find relevant skills from the Alicoder001/agent-skills repository based on pr..."
+default_prompt: "Use this skill when: Skill discovery and selection utility. Use when you need to find relevant skills from the Alicoder001/agent-skills repository based on project needs and technology stack."

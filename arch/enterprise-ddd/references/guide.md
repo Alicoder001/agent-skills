@@ -1,4 +1,4 @@
-﻿# Legacy Detailed Guide
+# Legacy Detailed Guide
 
 This file preserves the previous detailed version of `SKILL.md` for deep reference.
 
@@ -10,29 +10,29 @@ This file preserves the previous detailed version of `SKILL.md` for deep referen
 ## Architecture Overview
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                        APPS LAYER                          â”‚
-â”‚    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚    â”‚   Web   â”‚  â”‚  Admin  â”‚  â”‚ Mobile  â”‚  â”‚  Docs   â”‚     â”‚
-â”‚    â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-          â”‚            â”‚           â”‚           â”‚
-          â–¼            â–¼           â–¼           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    MODULES LAYER (DDD)                      â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”       â”‚
-â”‚  â”‚  @user   â”‚ â”‚  @order  â”‚ â”‚ @payment â”‚ â”‚ @catalog â”‚       â”‚
-â”‚  â”‚  (FSD)   â”‚ â”‚  (FSD)   â”‚ â”‚  (FSD)   â”‚ â”‚  (FSD)   â”‚       â”‚
-â”‚  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-        â”‚ Events     â”‚ Events    â”‚ Events    â”‚
-        â–¼            â–¼           â–¼           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   SERVICES LAYER (Backend)                   â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”               â”‚
-â”‚  â”‚user-serviceâ”‚ â”‚order-serviceâ”‚ â”‚payment-svc â”‚               â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜               â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────────────────────┐
+│                        APPS LAYER                          │
+│    ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐     │
+│    │   Web   │  │  Admin  │  │ Mobile  │  │  Docs   │     │
+│    └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘     │
+└─────────┼────────────┼───────────┼───────────┼────────────┘
+          │            │           │           │
+          ▼            ▼           ▼           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    MODULES LAYER (DDD)                      │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
+│  │  @user   │ │  @order  │ │ @payment │ │ @catalog │       │
+│  │  (FSD)   │ │  (FSD)   │ │  (FSD)   │ │  (FSD)   │       │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘       │
+└───────┼────────────┼───────────┼───────────┼───────────────┘
+        │ Events     │ Events    │ Events    │
+        ▼            ▼           ▼           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   SERVICES LAYER (Backend)                   │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐               │
+│  │user-service│ │order-service│ │payment-svc │               │
+│  └────────────┘ └────────────┘ └────────────┘               │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Instructions
@@ -41,91 +41,91 @@ This file preserves the previous detailed version of `SKILL.md` for deep referen
 
 ```
 enterprise-project/
-â”œâ”€â”€ apps/                          # Deployable applications
-â”‚   â”œâ”€â”€ web/                      # Next.js main app
-â”‚   â”œâ”€â”€ admin/                    # Admin dashboard
-â”‚   â”œâ”€â”€ mobile/                   # React Native
-â”‚   â””â”€â”€ docs/                     # Documentation
-â”‚
-â”œâ”€â”€ modules/                       # DDD Bounded Contexts
-â”‚   â”œâ”€â”€ @user/                    # User domain (FSD inside)
-â”‚   â”œâ”€â”€ @order/                   # Order domain (FSD inside)
-â”‚   â”œâ”€â”€ @payment/                 # Payment domain (FSD inside)
-â”‚   â”œâ”€â”€ @catalog/                 # Catalog domain (FSD inside)
-â”‚   â””â”€â”€ @notification/            # Notification domain (FSD inside)
-â”‚
-â”œâ”€â”€ packages/                      # Shared infrastructure
-â”‚   â”œâ”€â”€ ui/                       # Design system
-â”‚   â”œâ”€â”€ config/                   # Shared configs
-â”‚   â”œâ”€â”€ utils/                    # Common utilities
-â”‚   â”œâ”€â”€ types/                    # Shared types
-â”‚   â””â”€â”€ api-client/               # API client factory
-â”‚
-â”œâ”€â”€ services/                      # Backend microservices
-â”‚   â”œâ”€â”€ api-gateway/              # API Gateway
-â”‚   â”œâ”€â”€ user-service/             # User microservice
-â”‚   â”œâ”€â”€ order-service/            # Order microservice
-â”‚   â””â”€â”€ shared/                   # Shared service libs
-â”‚
-â”œâ”€â”€ infrastructure/                # DevOps
-â”‚   â”œâ”€â”€ docker/
-â”‚   â””â”€â”€ k8s/
-â”‚
-â”œâ”€â”€ turbo.json
-â”œâ”€â”€ pnpm-workspace.yaml
-â””â”€â”€ package.json
+├── apps/                          # Deployable applications
+│   ├── web/                      # Next.js main app
+│   ├── admin/                    # Admin dashboard
+│   ├── mobile/                   # React Native
+│   └── docs/                     # Documentation
+│
+├── modules/                       # DDD Bounded Contexts
+│   ├── @user/                    # User domain (FSD inside)
+│   ├── @order/                   # Order domain (FSD inside)
+│   ├── @payment/                 # Payment domain (FSD inside)
+│   ├── @catalog/                 # Catalog domain (FSD inside)
+│   └── @notification/            # Notification domain (FSD inside)
+│
+├── packages/                      # Shared infrastructure
+│   ├── ui/                       # Design system
+│   ├── config/                   # Shared configs
+│   ├── utils/                    # Common utilities
+│   ├── types/                    # Shared types
+│   └── api-client/               # API client factory
+│
+├── services/                      # Backend microservices
+│   ├── api-gateway/              # API Gateway
+│   ├── user-service/             # User microservice
+│   ├── order-service/            # Order microservice
+│   └── shared/                   # Shared service libs
+│
+├── infrastructure/                # DevOps
+│   ├── docker/
+│   └── k8s/
+│
+├── turbo.json
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
 ### 2. Module Structure (FSD per Domain)
 
 ```
 modules/@user/
-â”œâ”€â”€ entities/                      # Domain entities
-â”‚   â”œâ”€â”€ user/
-â”‚   â”‚   â”œâ”€â”€ model/
-â”‚   â”‚   â”‚   â”œâ”€â”€ user.types.ts     # User interface
-â”‚   â”‚   â”‚   â”œâ”€â”€ user.schema.ts    # Zod schema
-â”‚   â”‚   â”‚   â””â”€â”€ user.store.ts     # Entity store
-â”‚   â”‚   â”œâ”€â”€ api/
-â”‚   â”‚   â”‚   â”œâ”€â”€ user.api.ts       # API calls
-â”‚   â”‚   â”‚   â””â”€â”€ user.queries.ts   # React Query hooks
-â”‚   â”‚   â””â”€â”€ ui/
-â”‚   â”‚       â”œâ”€â”€ UserCard.tsx
-â”‚   â”‚       â””â”€â”€ UserAvatar.tsx
-â”‚   â””â”€â”€ session/
-â”‚       â”œâ”€â”€ model/
-â”‚       â”œâ”€â”€ api/
-â”‚       â””â”€â”€ ui/
-â”‚
-â”œâ”€â”€ features/                      # Use cases
-â”‚   â”œâ”€â”€ auth/
-â”‚   â”‚   â”œâ”€â”€ model/
-â”‚   â”‚   â”œâ”€â”€ api/
-â”‚   â”‚   â”œâ”€â”€ ui/
-â”‚   â”‚   â”‚   â”œâ”€â”€ LoginForm.tsx
-â”‚   â”‚   â”‚   â””â”€â”€ RegisterForm.tsx
-â”‚   â”‚   â””â”€â”€ index.ts
-â”‚   â”œâ”€â”€ profile/
-â”‚   â””â”€â”€ settings/
-â”‚
-â”œâ”€â”€ widgets/                       # Composite UI blocks
-â”‚   â”œâ”€â”€ user-header/
-â”‚   â”‚   â”œâ”€â”€ UserHeader.tsx
-â”‚   â”‚   â””â”€â”€ index.ts
-â”‚   â””â”€â”€ user-sidebar/
-â”‚
-â”œâ”€â”€ shared/                        # Module-specific shared
-â”‚   â”œâ”€â”€ api/
-â”‚   â”‚   â””â”€â”€ client.ts             # Module API client
-â”‚   â”œâ”€â”€ lib/
-â”‚   â”‚   â””â”€â”€ permissions.ts        # Permission helpers
-â”‚   â”œâ”€â”€ config/
-â”‚   â”‚   â””â”€â”€ routes.ts             # Module routes
-â”‚   â””â”€â”€ events/
-â”‚       â””â”€â”€ user.events.ts        # Domain events
-â”‚
-â”œâ”€â”€ index.ts                       # Public API
-â””â”€â”€ package.json
+├── entities/                      # Domain entities
+│   ├── user/
+│   │   ├── model/
+│   │   │   ├── user.types.ts     # User interface
+│   │   │   ├── user.schema.ts    # Zod schema
+│   │   │   └── user.store.ts     # Entity store
+│   │   ├── api/
+│   │   │   ├── user.api.ts       # API calls
+│   │   │   └── user.queries.ts   # React Query hooks
+│   │   └── ui/
+│   │       ├── UserCard.tsx
+│   │       └── UserAvatar.tsx
+│   └── session/
+│       ├── model/
+│       ├── api/
+│       └── ui/
+│
+├── features/                      # Use cases
+│   ├── auth/
+│   │   ├── model/
+│   │   ├── api/
+│   │   ├── ui/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── RegisterForm.tsx
+│   │   └── index.ts
+│   ├── profile/
+│   └── settings/
+│
+├── widgets/                       # Composite UI blocks
+│   ├── user-header/
+│   │   ├── UserHeader.tsx
+│   │   └── index.ts
+│   └── user-sidebar/
+│
+├── shared/                        # Module-specific shared
+│   ├── api/
+│   │   └── client.ts             # Module API client
+│   ├── lib/
+│   │   └── permissions.ts        # Permission helpers
+│   ├── config/
+│   │   └── routes.ts             # Module routes
+│   └── events/
+│       └── user.events.ts        # Domain events
+│
+├── index.ts                       # Public API
+└── package.json
 ```
 
 ### 3. Public API Pattern
@@ -154,10 +154,10 @@ export { userEvents } from './shared/events';
 ### 4. Cross-Module Communication
 
 ```typescript
-// âŒ FORBIDDEN: Direct cross-module imports
+// ❌ FORBIDDEN: Direct cross-module imports
 import { Order } from '@order/entities'; // NO!
 
-// âœ… ALLOWED: Event-based communication
+// ✅ ALLOWED: Event-based communication
 // modules/@user/shared/events/user.events.ts
 import { createEventBus } from '@repo/utils/events';
 
@@ -180,51 +180,51 @@ userEvents.on('user:created', async ({ userId }) => {
 
 ```
 services/user-service/
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ domain/                    # Domain Layer (Pure)
-â”‚   â”‚   â”œâ”€â”€ entities/
-â”‚   â”‚   â”‚   â””â”€â”€ User.ts           # User aggregate root
-â”‚   â”‚   â”œâ”€â”€ value-objects/
-â”‚   â”‚   â”‚   â”œâ”€â”€ Email.ts
-â”‚   â”‚   â”‚   â””â”€â”€ Password.ts
-â”‚   â”‚   â”œâ”€â”€ events/
-â”‚   â”‚   â”‚   â”œâ”€â”€ UserCreated.ts
-â”‚   â”‚   â”‚   â””â”€â”€ UserUpdated.ts
-â”‚   â”‚   â””â”€â”€ repositories/
-â”‚   â”‚       â””â”€â”€ IUserRepository.ts # Interface only
-â”‚   â”‚
-â”‚   â”œâ”€â”€ application/               # Application Layer
-â”‚   â”‚   â”œâ”€â”€ commands/
-â”‚   â”‚   â”‚   â”œâ”€â”€ CreateUser.ts
-â”‚   â”‚   â”‚   â””â”€â”€ UpdateUser.ts
-â”‚   â”‚   â”œâ”€â”€ queries/
-â”‚   â”‚   â”‚   â”œâ”€â”€ GetUser.ts
-â”‚   â”‚   â”‚   â””â”€â”€ ListUsers.ts
-â”‚   â”‚   â””â”€â”€ services/
-â”‚   â”‚       â””â”€â”€ AuthService.ts
-â”‚   â”‚
-â”‚   â”œâ”€â”€ infrastructure/            # Infrastructure Layer
-â”‚   â”‚   â”œâ”€â”€ persistence/
-â”‚   â”‚   â”‚   â”œâ”€â”€ UserRepository.ts # Implementation
-â”‚   â”‚   â”‚   â””â”€â”€ prisma/
-â”‚   â”‚   â”œâ”€â”€ messaging/
-â”‚   â”‚   â”‚   â””â”€â”€ RabbitMQPublisher.ts
-â”‚   â”‚   â””â”€â”€ external/
-â”‚   â”‚       â””â”€â”€ StripeClient.ts
-â”‚   â”‚
-â”‚   â””â”€â”€ presentation/              # Presentation Layer
-â”‚       â”œâ”€â”€ controllers/
-â”‚       â”‚   â””â”€â”€ UserController.ts
-â”‚       â”œâ”€â”€ dtos/
-â”‚       â”‚   â”œâ”€â”€ CreateUserDto.ts
-â”‚       â”‚   â””â”€â”€ UserResponseDto.ts
-â”‚       â””â”€â”€ mappers/
-â”‚           â””â”€â”€ UserMapper.ts
-â”‚
-â”œâ”€â”€ prisma/
-â”‚   â””â”€â”€ schema.prisma
-â”œâ”€â”€ Dockerfile
-â””â”€â”€ package.json
+├── src/
+│   ├── domain/                    # Domain Layer (Pure)
+│   │   ├── entities/
+│   │   │   └── User.ts           # User aggregate root
+│   │   ├── value-objects/
+│   │   │   ├── Email.ts
+│   │   │   └── Password.ts
+│   │   ├── events/
+│   │   │   ├── UserCreated.ts
+│   │   │   └── UserUpdated.ts
+│   │   └── repositories/
+│   │       └── IUserRepository.ts # Interface only
+│   │
+│   ├── application/               # Application Layer
+│   │   ├── commands/
+│   │   │   ├── CreateUser.ts
+│   │   │   └── UpdateUser.ts
+│   │   ├── queries/
+│   │   │   ├── GetUser.ts
+│   │   │   └── ListUsers.ts
+│   │   └── services/
+│   │       └── AuthService.ts
+│   │
+│   ├── infrastructure/            # Infrastructure Layer
+│   │   ├── persistence/
+│   │   │   ├── UserRepository.ts # Implementation
+│   │   │   └── prisma/
+│   │   ├── messaging/
+│   │   │   └── RabbitMQPublisher.ts
+│   │   └── external/
+│   │       └── StripeClient.ts
+│   │
+│   └── presentation/              # Presentation Layer
+│       ├── controllers/
+│       │   └── UserController.ts
+│       ├── dtos/
+│       │   ├── CreateUserDto.ts
+│       │   └── UserResponseDto.ts
+│       └── mappers/
+│           └── UserMapper.ts
+│
+├── prisma/
+│   └── schema.prisma
+├── Dockerfile
+└── package.json
 ```
 
 ### 6. Event-Driven Architecture
@@ -366,16 +366,16 @@ pnpm generate:service inventory-service
 ### 10. Database Strategy
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚           Database per Service              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ user-service     â†’ PostgreSQL (users)       â”‚
-â”‚ order-service    â†’ PostgreSQL (orders)      â”‚
-â”‚ payment-service  â†’ PostgreSQL (payments)    â”‚
-â”‚ catalog-service  â†’ PostgreSQL (products)    â”‚
-â”‚ notification-svc â†’ MongoDB (notifications)  â”‚
-â”‚ analytics-svc    â†’ ClickHouse (events)      â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌─────────────────────────────────────────────┐
+│           Database per Service              │
+├─────────────────────────────────────────────┤
+│ user-service     → PostgreSQL (users)       │
+│ order-service    → PostgreSQL (orders)      │
+│ payment-service  → PostgreSQL (payments)    │
+│ catalog-service  → PostgreSQL (products)    │
+│ notification-svc → MongoDB (notifications)  │
+│ analytics-svc    → ClickHouse (events)      │
+└─────────────────────────────────────────────┘
 
 Communication: Events via RabbitMQ/Kafka
 ```

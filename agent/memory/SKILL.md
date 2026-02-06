@@ -1,6 +1,6 @@
 ---
 name: memory
-description: Working memory management, context prioritization, and knowledge retention patterns for AI agents. Use to maintain relevant context and avoid information loss during long tasks.
+description: Working memory management, context prioritization, and knowledge retention patterns for AI agents. Use when you need to maintain relevant context and avoid information loss during long tasks.
 ---
 
 # Memory Management

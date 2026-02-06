@@ -1,4 +1,4 @@
-﻿# Legacy Detailed Guide
+# Legacy Detailed Guide
 
 This file preserves the previous detailed version of `SKILL.md` for deep reference.
 
@@ -401,10 +401,10 @@ export function ContactForm() {
 
 | Do | Don't |
 |----|-------|
-| âœ… Use Zod for validation | âŒ Manual validation |
-| âœ… Show errors inline | âŒ Alert on submit |
-| âœ… Disable button while submitting | âŒ Allow double submit |
-| âœ… Use `mode: 'onBlur'` for UX | âŒ Validate on every keystroke |
+| ✅ Use Zod for validation | ❌ Manual validation |
+| ✅ Show errors inline | ❌ Alert on submit |
+| ✅ Disable button while submitting | ❌ Allow double submit |
+| ✅ Use `mode: 'onBlur'` for UX | ❌ Validate on every keystroke |
 
 ## References
 

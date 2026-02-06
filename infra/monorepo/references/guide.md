@@ -1,4 +1,4 @@
-﻿# Legacy Detailed Guide
+# Legacy Detailed Guide
 
 This file preserves the previous detailed version of `SKILL.md` for deep reference.
 
@@ -13,33 +13,33 @@ This file preserves the previous detailed version of `SKILL.md` for deep referen
 
 ```
 my-monorepo/
-â”œâ”€â”€ apps/
-â”‚   â”œâ”€â”€ web/                 # Next.js main app
-â”‚   â”‚   â”œâ”€â”€ package.json
-â”‚   â”‚   â””â”€â”€ src/
-â”‚   â”œâ”€â”€ admin/               # Admin dashboard
-â”‚   â”‚   â”œâ”€â”€ package.json
-â”‚   â”‚   â””â”€â”€ src/
-â”‚   â””â”€â”€ docs/                # Documentation site
-â”‚       â”œâ”€â”€ package.json
-â”‚       â””â”€â”€ src/
-â”œâ”€â”€ packages/
-â”‚   â”œâ”€â”€ ui/                  # Shared UI components
-â”‚   â”‚   â”œâ”€â”€ package.json
-â”‚   â”‚   â””â”€â”€ src/
-â”‚   â”œâ”€â”€ config/              # Shared configs (ESLint, TS)
-â”‚   â”‚   â”œâ”€â”€ eslint/
-â”‚   â”‚   â””â”€â”€ typescript/
-â”‚   â”œâ”€â”€ utils/               # Shared utilities
-â”‚   â”‚   â”œâ”€â”€ package.json
-â”‚   â”‚   â””â”€â”€ src/
-â”‚   â””â”€â”€ types/               # Shared TypeScript types
-â”‚       â”œâ”€â”€ package.json
-â”‚       â””â”€â”€ src/
-â”œâ”€â”€ package.json             # Root package.json
-â”œâ”€â”€ pnpm-workspace.yaml      # pnpm workspaces
-â”œâ”€â”€ turbo.json               # Turborepo config
-â””â”€â”€ .npmrc
+├── apps/
+│   ├── web/                 # Next.js main app
+│   │   ├── package.json
+│   │   └── src/
+│   ├── admin/               # Admin dashboard
+│   │   ├── package.json
+│   │   └── src/
+│   └── docs/                # Documentation site
+│       ├── package.json
+│       └── src/
+├── packages/
+│   ├── ui/                  # Shared UI components
+│   │   ├── package.json
+│   │   └── src/
+│   ├── config/              # Shared configs (ESLint, TS)
+│   │   ├── eslint/
+│   │   └── typescript/
+│   ├── utils/               # Shared utilities
+│   │   ├── package.json
+│   │   └── src/
+│   └── types/               # Shared TypeScript types
+│       ├── package.json
+│       └── src/
+├── package.json             # Root package.json
+├── pnpm-workspace.yaml      # pnpm workspaces
+├── turbo.json               # Turborepo config
+└── .npmrc
 ```
 
 ### 2. Root package.json
@@ -302,11 +302,11 @@ graph TD
 
 | Do | Don't |
 |----|-------|
-| âœ… Use workspace:* for internal deps | âŒ Hardcode versions |
-| âœ… Share configs (ESLint, TS) | âŒ Duplicate configs |
-| âœ… Use Turborepo caching | âŒ Rebuild everything |
-| âœ… Clear package boundaries | âŒ Circular dependencies |
-| âœ… Internal packages are private | âŒ Publish internal packages |
+| ✅ Use workspace:* for internal deps | ❌ Hardcode versions |
+| ✅ Share configs (ESLint, TS) | ❌ Duplicate configs |
+| ✅ Use Turborepo caching | ❌ Rebuild everything |
+| ✅ Clear package boundaries | ❌ Circular dependencies |
+| ✅ Internal packages are private | ❌ Publish internal packages |
 
 ## References
 

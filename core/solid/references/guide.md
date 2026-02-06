@@ -1,4 +1,4 @@
-﻿# Legacy Detailed Guide
+# Legacy Detailed Guide
 
 This file preserves the previous detailed version of `SKILL.md` for deep reference.
 
@@ -25,7 +25,7 @@ This file preserves the previous detailed version of `SKILL.md` for deep referen
 ### 1. Single Responsibility Principle (SRP)
 
 ```typescript
-// âŒ Bad - Multiple responsibilities
+// ❌ Bad - Multiple responsibilities
 class UserService {
   createUser(data: CreateUserDto) { /* ... */ }
   sendWelcomeEmail(user: User) { /* ... */ }
@@ -33,7 +33,7 @@ class UserService {
   validatePassword(password: string) { /* ... */ }
 }
 
-// âœ… Good - Separated concerns
+// ✅ Good - Separated concerns
 class UserService {
   constructor(
     private readonly userRepository: UserRepository,
@@ -60,7 +60,7 @@ class ReportService {
 ### 2. Open/Closed Principle (OCP)
 
 ```typescript
-// âŒ Bad - Modifying existing code for new features
+// ❌ Bad - Modifying existing code for new features
 class PaymentProcessor {
   process(type: string, amount: number) {
     if (type === 'credit') {
@@ -73,7 +73,7 @@ class PaymentProcessor {
   }
 }
 
-// âœ… Good - Extend without modification
+// ✅ Good - Extend without modification
 interface PaymentMethod {
   process(amount: number): Promise<PaymentResult>;
 }
@@ -102,7 +102,7 @@ class PaymentProcessor {
 ### 3. Liskov Substitution Principle (LSP)
 
 ```typescript
-// âŒ Bad - Subtype changes behavior unexpectedly
+// ❌ Bad - Subtype changes behavior unexpectedly
 class Rectangle {
   constructor(protected width: number, protected height: number) {}
   setWidth(w: number) { this.width = w; }
@@ -117,7 +117,7 @@ class Square extends Rectangle {
   }
 }
 
-// âœ… Good - Use composition or proper abstraction
+// ✅ Good - Use composition or proper abstraction
 interface Shape {
   getArea(): number;
 }
@@ -136,7 +136,7 @@ class Square implements Shape {
 ### 4. Interface Segregation Principle (ISP)
 
 ```typescript
-// âŒ Bad - Fat interface
+// ❌ Bad - Fat interface
 interface Worker {
   work(): void;
   eat(): void;
@@ -147,7 +147,7 @@ interface Worker {
 
 // Robot can't eat/sleep, Manager can't code
 
-// âœ… Good - Segregated interfaces
+// ✅ Good - Segregated interfaces
 interface Workable {
   work(): void;
 }
@@ -179,7 +179,7 @@ class Robot implements Workable, Codeable {
 ### 5. Dependency Inversion Principle (DIP)
 
 ```typescript
-// âŒ Bad - High-level depends on low-level
+// ❌ Bad - High-level depends on low-level
 class UserService {
   private database = new MySQLDatabase(); // Concrete dependency
 
@@ -188,7 +188,7 @@ class UserService {
   }
 }
 
-// âœ… Good - Depend on abstractions
+// ✅ Good - Depend on abstractions
 interface Database {
   query<T>(sql: string): Promise<T>;
 }
@@ -220,7 +220,7 @@ const userService = new UserService(new MySQLUserRepository(database));
 ### 6. DRY (Don't Repeat Yourself)
 
 ```typescript
-// âŒ Bad - Repeated logic
+// ❌ Bad - Repeated logic
 function validateEmail(email: string) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!regex.test(email)) throw new Error('Invalid email');
@@ -231,7 +231,7 @@ function validateUserEmail(email: string) {
   if (!regex.test(email)) throw new Error('Invalid email');
 }
 
-// âœ… Good - Single source of truth
+// ✅ Good - Single source of truth
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isValidEmail(email: string): boolean {
@@ -248,7 +248,7 @@ function validateEmail(email: string): void {
 ### 7. KISS (Keep It Simple, Stupid)
 
 ```typescript
-// âŒ Bad - Over-engineered
+// ❌ Bad - Over-engineered
 class UserNameFormatter {
   private strategies: Map<string, FormatterStrategy>;
   
@@ -263,7 +263,7 @@ class UserNameFormatter {
   }
 }
 
-// âœ… Good - Simple and clear
+// ✅ Good - Simple and clear
 function formatUserName(user: User, format: 'full' | 'initials'): string {
   if (format === 'full') {
     return `${user.firstName} ${user.lastName}`;
@@ -275,7 +275,7 @@ function formatUserName(user: User, format: 'full' | 'initials'): string {
 ### 8. YAGNI (You Ain't Gonna Need It)
 
 ```typescript
-// âŒ Bad - Building for hypothetical future
+// ❌ Bad - Building for hypothetical future
 interface User {
   id: string;
   name: string;
@@ -287,7 +287,7 @@ interface User {
   mothersMaidenName?: string;
 }
 
-// âœ… Good - Build what you need now
+// ✅ Good - Build what you need now
 interface User {
   id: string;
   name: string;
@@ -300,12 +300,12 @@ interface User {
 ### 9. Clean Functions
 
 ```typescript
-// âŒ Bad
+// ❌ Bad
 function process(d: any, t: string, f: boolean) {
   // What do d, t, f mean?
 }
 
-// âœ… Good
+// ✅ Good
 function processPayment(
   paymentData: PaymentData,
   transactionType: TransactionType,
@@ -314,10 +314,10 @@ function processPayment(
   // Clear intent
 }
 
-// âŒ Bad - Too many parameters
+// ❌ Bad - Too many parameters
 function createUser(name, email, age, role, department, manager, salary) {}
 
-// âœ… Good - Use object parameter
+// ✅ Good - Use object parameter
 interface CreateUserParams {
   name: string;
   email: string;
@@ -333,13 +333,13 @@ function createUser(params: CreateUserParams): User {}
 ### 10. Composition Over Inheritance
 
 ```typescript
-// âŒ Bad - Deep inheritance
+// ❌ Bad - Deep inheritance
 class Animal { }
 class Mammal extends Animal { }
 class Dog extends Mammal { }
 class GermanShepherd extends Dog { }
 
-// âœ… Good - Composition
+// ✅ Good - Composition
 interface Walkable {
   walk(): void;
 }
