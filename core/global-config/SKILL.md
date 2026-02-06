@@ -38,7 +38,8 @@ description: Global defaults and interaction rules for all Alicoder001 skills. U
 **Detection logic:**
 1. Check if context files exist and use them silently.
 2. Check `package.json` dependencies and infer stack.
-3. If no context found, proceed with reasonable defaults.
+3. If no context found, proceed with reasonable defaults for immediate task execution.
+4. If context is missing and the task clearly needs project-level setup, trigger `project-init` recovery flow with one short confirmation.
 
 > **Rule**: If you cannot detect, proceed with the task. Do not block.
 

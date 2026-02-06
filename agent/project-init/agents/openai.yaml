@@ -1,4 +1,4 @@
 version: 1
 display_name: "Project Init"
-short_description: "Project setup wizard for AI agents. Use ONLY when user explicitly requests setup. Generates .agents/CONTEXT.md with stack, structure, cod..."
-default_prompt: "Use this skill when: Project setup wizard for AI agents. Use ONLY when user explicitly requests setup. Generates .agents/CONTEXT.md with stack, structure, coding rules, and skill mapping."
+short_description: "Project setup wizard for AI agents. Use when user requests setup or when .agents/CONTEXT.md is missing or incomplete and setup recovery i..."
+default_prompt: "Use this skill when: Project setup wizard for AI agents. Use when user requests setup or when .agents/CONTEXT.md is missing or incomplete and setup recovery is needed. Generates .agents/CONTEXT.md with stack, structure, coding rules, and skill mapping."

@@ -1,15 +1,15 @@
 ---
 name: project-init
-description: Project setup wizard for AI agents. Use ONLY when user explicitly requests setup. Generates .agents/CONTEXT.md with stack, structure, coding rules, and skill mapping.
+description: Project setup wizard for AI agents. Use when user requests setup or when .agents/CONTEXT.md is missing or incomplete and setup recovery is needed. Generates .agents/CONTEXT.md with stack, structure, coding rules, and skill mapping.
 ---
 
 # Project Init Wizard
 
-> Run only on explicit setup requests such as "Setup project", "Initialize context", or "Generate CONTEXT.md".
+> Run on setup requests and context-recovery requests such as "Setup project", "Initialize context", "Generate CONTEXT.md", or "CONTEXT.md was deleted".
 
 ## Core Rules
 
-1. Never run automatically.
+1. Do not run blindly. Trigger only for setup intent or missing/incomplete context recovery intent.
 2. Ask one question at a time.
 3. Analyze local files before asking setup questions.
 4. Do not re-ask values that are already inferred with high confidence.

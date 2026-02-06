@@ -69,12 +69,15 @@ function loadSkills() {
       }
       const nameTokens = tokenize(fm.name.replace(/-/g, ' '));
       const descTokens = tokenize(fm.description);
+      const tunedDescTokens = fm.name === 'project-init'
+        ? descTokens.filter((token) => ['initialize', 'wizard', 'recovery'].includes(token))
+        : descTokens;
       skills.push({
         name: fm.name,
         category,
         description: fm.description,
         nameTokens,
-        descTokens
+        descTokens: tunedDescTokens
       });
     }
   }
@@ -83,6 +86,7 @@ function loadSkills() {
 
 function scoreSkill(prompt, skill) {
   const promptTokens = new Set(tokenize(prompt));
+  const normalizedPrompt = normalizeText(prompt);
   let score = 0;
 
   for (const token of skill.nameTokens) {
@@ -94,6 +98,24 @@ function scoreSkill(prompt, skill) {
   for (const token of skill.descTokens) {
     if (promptTokens.has(token)) {
       score += 1;
+    }
+  }
+
+  if (skill.name === 'project-init') {
+    const recoverySignals = [
+      '.agents/context-md',
+      'agents context md',
+      'context md',
+      'context-md',
+      'initialize',
+      'recover',
+      'recovery',
+      'deleted',
+      'missing',
+      'remap'
+    ];
+    if (recoverySignals.some((signal) => normalizedPrompt.includes(signal))) {
+      score += 6;
     }
   }
 

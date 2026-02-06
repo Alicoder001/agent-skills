@@ -7,6 +7,7 @@
     { "id": "agent-memory", "prompt": "This long task keeps losing context; I need a method to retain key decisions across turns.", "expected": "memory" },
     { "id": "agent-planning", "prompt": "Break this complex implementation into sequenced steps with adaptive checkpoints.", "expected": "planning" },
     { "id": "agent-project-init", "prompt": "Initialize a new repo context file with baseline defaults for this project.", "expected": "project-init" },
+    { "id": "agent-project-init-recovery", "prompt": "I deleted .agents/CONTEXT.md by mistake, recover setup context and remap required skills.", "expected": "project-init" },
     { "id": "agent-reasoning", "prompt": "Before coding, I need a structured reasoning approach to reduce wrong assumptions.", "expected": "reasoning" },
     { "id": "agent-senior", "prompt": "Review this frontend work for accessibility, responsiveness, and production-grade quality.", "expected": "senior" },
     { "id": "agent-skill-update", "prompt": "I changed an existing skill and need to align formatting, versioning, and changelog safely.", "expected": "skill-update" },
