@@ -16,6 +16,12 @@ npx skills add Alicoder001/agent-skills --skill project-init
 npx skills add Alicoder001/agent-skills
 ```
 
+## Guides
+
+- User guide: `docs/USER_GUIDE.md`
+- Max results playbook: `docs/MAX_RESULTS_PLAYBOOK.md`
+- Maintainer guide: `docs/MAINTAINER_GUIDE.md`
+
 ### Interactive Wizard
 
 ```bash
@@ -67,6 +73,12 @@ node scripts/run-trigger-evals.js
 
 Eval dataset:
 - `evals/trigger-evals.json`
+
+## One-Command Quality Gate
+
+```bash
+node scripts/quality-gate.js
+```
 
 ## Git Hooks
 
