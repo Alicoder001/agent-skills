@@ -1,0 +1,4 @@
+version: 1
+display_name: "Collaboration"
+short_description: "Multi-agent communication, task delegation, and coordination patterns. Use when working with multiple agents or complex collaborative wor..."
+default_prompt: "Use this skill when: Multi-agent communication, task delegation, and coordination patterns. Use when working with multiple agents or complex collaborative workflows."

@@ -1,0 +1,4 @@
+version: 1
+display_name: "Javascript"
+short_description: "JavaScript micro-optimizations and performance patterns. Use when optimizing loops, array operations, caching, or DOM manipulation. Inclu..."
+default_prompt: "Use this skill when: JavaScript micro-optimizations and performance patterns. Use when optimizing loops, array operations, caching, or DOM manipulation. Includes Set/Map usage, early returns, and memory-efficient patterns."

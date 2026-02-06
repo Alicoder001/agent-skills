@@ -1,0 +1,4 @@
+version: 1
+display_name: "Skill Update"
+short_description: "Skill versioning and update management. Use when updating existing skills, following semantic versioning, and maintaining changelogs."
+default_prompt: "Use this skill when: Skill versioning and update management. Use when updating existing skills, following semantic versioning, and maintaining changelogs."

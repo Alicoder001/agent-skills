@@ -1,0 +1,4 @@
+version: 1
+display_name: "Enterprise Ddd"
+short_description: "Enterprise-grade architecture combining DDD bounded contexts with Feature-Sliced Design. Use for large-scale monorepos with multiple doma..."
+default_prompt: "Use this skill when: Enterprise-grade architecture combining DDD bounded contexts with Feature-Sliced Design. Use for large-scale monorepos with multiple domains, microservices, event-driven communication, and scalable frontend modules."

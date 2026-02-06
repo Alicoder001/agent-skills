@@ -5,412 +5,85 @@ description: Enterprise-grade architecture combining DDD bounded contexts with F
 
 # Enterprise DDD Architecture
 
-> Domain-Driven Design + Feature-Sliced Design + Microservices
+> Use this skill for large systems where domain boundaries, ownership, and cross-team scaling matter more than local feature speed.
 
-## Architecture Overview
+## Use This Skill When
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        APPS LAYER                          │
-│    ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐     │
-│    │   Web   │  │  Admin  │  │ Mobile  │  │  Docs   │     │
-│    └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘     │
-└─────────┼────────────┼───────────┼───────────┼────────────┘
-          │            │           │           │
-          ▼            ▼           ▼           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    MODULES LAYER (DDD)                      │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
-│  │  @user   │ │  @order  │ │ @payment │ │ @catalog │       │
-│  │  (FSD)   │ │  (FSD)   │ │  (FSD)   │ │  (FSD)   │       │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘       │
-└───────┼────────────┼───────────┼───────────┼───────────────┘
-        │ Events     │ Events    │ Events    │
-        ▼            ▼           ▼           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   SERVICES LAYER (Backend)                   │
-│  ┌────────────┐ ┌────────────┐ ┌────────────┐               │
-│  │user-service│ │order-service│ │payment-svc │               │
-│  └────────────┘ └────────────┘ └────────────┘               │
-└─────────────────────────────────────────────────────────────┘
-```
+- Multiple domains must be isolated (billing, auth, catalog, attendance, etc.).
+- You need explicit module contracts across frontend and backend.
+- Event-driven integration is preferred over direct cross-module coupling.
+- Monorepo governance and release boundaries are required.
 
-## Instructions
+## Do Not Use When
 
-### 1. Monorepo Structure
+- Project is small or single-team with low domain complexity.
+- A simple layered architecture is sufficient.
 
-```
-enterprise-project/
-├── apps/                          # Deployable applications
-│   ├── web/                      # Next.js main app
-│   ├── admin/                    # Admin dashboard
-│   ├── mobile/                   # React Native
-│   └── docs/                     # Documentation
-│
-├── modules/                       # DDD Bounded Contexts
-│   ├── @user/                    # User domain (FSD inside)
-│   ├── @order/                   # Order domain (FSD inside)
-│   ├── @payment/                 # Payment domain (FSD inside)
-│   ├── @catalog/                 # Catalog domain (FSD inside)
-│   └── @notification/            # Notification domain (FSD inside)
-│
-├── packages/                      # Shared infrastructure
-│   ├── ui/                       # Design system
-│   ├── config/                   # Shared configs
-│   ├── utils/                    # Common utilities
-│   ├── types/                    # Shared types
-│   └── api-client/               # API client factory
-│
-├── services/                      # Backend microservices
-│   ├── api-gateway/              # API Gateway
-│   ├── user-service/             # User microservice
-│   ├── order-service/            # Order microservice
-│   └── shared/                   # Shared service libs
-│
-├── infrastructure/                # DevOps
-│   ├── docker/
-│   └── k8s/
-│
-├── turbo.json
-├── pnpm-workspace.yaml
-└── package.json
+## Architecture Contract
+
+1. Model domain boundaries first (bounded contexts).
+2. Keep each domain module internally FSD-like and externally contract-based.
+3. Forbid deep cross-module imports.
+4. Communicate across modules/services with events or stable APIs.
+5. Maintain separate deployable apps and services.
+6. Keep shared packages infra-only (`types`, `ui`, `config`, `utils`).
+
+## Recommended Structure
+
+```text
+apps/              deployable apps
+modules/           bounded-context frontend modules
+services/          bounded-context backend services
+packages/          shared infrastructure packages
+infrastructure/    deployment and platform resources
 ```
 
-### 2. Module Structure (FSD per Domain)
+## Implementation Workflow
 
-```
-modules/@user/
-├── entities/                      # Domain entities
-│   ├── user/
-│   │   ├── model/
-│   │   │   ├── user.types.ts     # User interface
-│   │   │   ├── user.schema.ts    # Zod schema
-│   │   │   └── user.store.ts     # Entity store
-│   │   ├── api/
-│   │   │   ├── user.api.ts       # API calls
-│   │   │   └── user.queries.ts   # React Query hooks
-│   │   └── ui/
-│   │       ├── UserCard.tsx
-│   │       └── UserAvatar.tsx
-│   └── session/
-│       ├── model/
-│       ├── api/
-│       └── ui/
-│
-├── features/                      # Use cases
-│   ├── auth/
-│   │   ├── model/
-│   │   ├── api/
-│   │   ├── ui/
-│   │   │   ├── LoginForm.tsx
-│   │   │   └── RegisterForm.tsx
-│   │   └── index.ts
-│   ├── profile/
-│   └── settings/
-│
-├── widgets/                       # Composite UI blocks
-│   ├── user-header/
-│   │   ├── UserHeader.tsx
-│   │   └── index.ts
-│   └── user-sidebar/
-│
-├── shared/                        # Module-specific shared
-│   ├── api/
-│   │   └── client.ts             # Module API client
-│   ├── lib/
-│   │   └── permissions.ts        # Permission helpers
-│   ├── config/
-│   │   └── routes.ts             # Module routes
-│   └── events/
-│       └── user.events.ts        # Domain events
-│
-├── index.ts                       # Public API
-└── package.json
-```
+### 1) Domain Modeling
 
-### 3. Public API Pattern
+- List domains and ownership.
+- Define each module public API (`index.ts`) first.
+- Define event contracts and versioning.
 
-```typescript
-// modules/@user/index.ts
-// ONLY export what other modules can use
+### 2) Module Design (Frontend)
 
-// Entities (read-only)
-export type { User, UserRole } from './entities/user/model';
-export { UserCard, UserAvatar } from './entities/user/ui';
+- Apply FSD inside a domain module:
+- `entities`, `features`, `widgets`, `shared`.
+- Export only public APIs from module root.
+- Keep domain state and API hooks inside module boundary.
 
-// Features (actions)
-export { LoginForm, RegisterForm } from './features/auth';
-export { useAuth, useCurrentUser } from './features/auth';
+### 3) Service Design (Backend)
 
-// Widgets (composite)
-export { UserHeader } from './widgets/user-header';
+- Keep domain, application, infrastructure, presentation separation.
+- Use repository interfaces in domain layer and implementations in infrastructure.
+- Emit domain events for cross-service actions.
 
-// Events (communication)
-export { userEvents } from './shared/events';
+### 4) Integration Rules
 
-// DO NOT export internal implementation details
-```
+- Allowed: event bus, API client boundary, declared public exports.
+- Forbidden: direct imports into other module internals.
+- Enforce via lint/import rules in CI.
 
-### 4. Cross-Module Communication
+### 5) Rollout
 
-```typescript
-// ❌ FORBIDDEN: Direct cross-module imports
-import { Order } from '@order/entities'; // NO!
-
-// ✅ ALLOWED: Event-based communication
-// modules/@user/shared/events/user.events.ts
-import { createEventBus } from '@repo/utils/events';
-
-export const userEvents = createEventBus<{
-  'user:created': { userId: string; email: string };
-  'user:updated': { userId: string; changes: Partial<User> };
-  'user:deleted': { userId: string };
-}>();
-
-// modules/@order/features/create-order/model/useCreateOrder.ts
-import { userEvents } from '@user/shared/events';
-
-userEvents.on('user:created', async ({ userId }) => {
-  // Create welcome cart for new user
-  await createWelcomeCart(userId);
-});
-```
-
-### 5. Backend Service Structure (DDD)
-
-```
-services/user-service/
-├── src/
-│   ├── domain/                    # Domain Layer (Pure)
-│   │   ├── entities/
-│   │   │   └── User.ts           # User aggregate root
-│   │   ├── value-objects/
-│   │   │   ├── Email.ts
-│   │   │   └── Password.ts
-│   │   ├── events/
-│   │   │   ├── UserCreated.ts
-│   │   │   └── UserUpdated.ts
-│   │   └── repositories/
-│   │       └── IUserRepository.ts # Interface only
-│   │
-│   ├── application/               # Application Layer
-│   │   ├── commands/
-│   │   │   ├── CreateUser.ts
-│   │   │   └── UpdateUser.ts
-│   │   ├── queries/
-│   │   │   ├── GetUser.ts
-│   │   │   └── ListUsers.ts
-│   │   └── services/
-│   │       └── AuthService.ts
-│   │
-│   ├── infrastructure/            # Infrastructure Layer
-│   │   ├── persistence/
-│   │   │   ├── UserRepository.ts # Implementation
-│   │   │   └── prisma/
-│   │   ├── messaging/
-│   │   │   └── RabbitMQPublisher.ts
-│   │   └── external/
-│   │       └── StripeClient.ts
-│   │
-│   └── presentation/              # Presentation Layer
-│       ├── controllers/
-│       │   └── UserController.ts
-│       ├── dtos/
-│       │   ├── CreateUserDto.ts
-│       │   └── UserResponseDto.ts
-│       └── mappers/
-│           └── UserMapper.ts
-│
-├── prisma/
-│   └── schema.prisma
-├── Dockerfile
-└── package.json
-```
-
-### 6. Event-Driven Architecture
-
-```typescript
-// services/shared/events/index.ts
-export const DomainEvents = {
-  User: {
-    Created: 'user.created',
-    Updated: 'user.updated',
-    Deleted: 'user.deleted',
-  },
-  Order: {
-    Created: 'order.created',
-    Completed: 'order.completed',
-    Cancelled: 'order.cancelled',
-  },
-  Payment: {
-    Processed: 'payment.processed',
-    Failed: 'payment.failed',
-  },
-} as const;
-
-// services/user-service/src/application/commands/CreateUser.ts
-import { EventPublisher } from '@services/shared/messaging';
-
-export class CreateUserHandler {
-  constructor(
-    private userRepo: IUserRepository,
-    private eventPublisher: EventPublisher,
-  ) {}
-
-  async execute(command: CreateUserCommand): Promise<User> {
-    const user = User.create(command);
-    await this.userRepo.save(user);
-
-    // Publish domain event
-    await this.eventPublisher.publish(DomainEvents.User.Created, {
-      userId: user.id,
-      email: user.email.value,
-      createdAt: new Date(),
-    });
-
-    return user;
-  }
-}
-```
-
-### 7. Workspace Configuration
-
-```yaml
-# pnpm-workspace.yaml
-packages:
-  - "apps/*"
-  - "modules/*"
-  - "packages/*"
-  - "services/*"
-```
-
-```json
-// turbo.json
-{
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
-    "test": {
-      "dependsOn": ["^build"]
-    }
-  }
-}
-```
-
-### 8. Import Rules
-
-```typescript
-// eslint-plugin-import rules
-const importRules = {
-  // Apps can import from modules and packages
-  'apps/*': ['modules/*', 'packages/*'],
-  
-  // Modules can import from packages, NOT from other modules
-  'modules/*': ['packages/*', '@repo/*'],
-  
-  // FSD layer rules within module
-  'entities': ['shared'],
-  'features': ['entities', 'shared'],
-  'widgets': ['features', 'entities', 'shared'],
-  
-  // Services can import from shared only
-  'services/*': ['services/shared'],
-};
-```
-
-```javascript
-// .eslintrc.js
-module.exports = {
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: [
-          {
-            group: ['@order/*', '@payment/*', '@catalog/*'],
-            message: 'Cross-module imports forbidden. Use events.',
-          },
-        ],
-      },
-    ],
-  },
-};
-```
-
-### 9. Code Generator Commands
-
-```bash
-# Create new domain module
-pnpm generate:module @inventory
-
-# Create new feature in module
-pnpm generate:feature @user/password-reset
-
-# Create new entity
-pnpm generate:entity @order/order-item
-
-# Create new backend service
-pnpm generate:service inventory-service
-```
-
-### 10. Database Strategy
-
-```
-┌─────────────────────────────────────────────┐
-│           Database per Service              │
-├─────────────────────────────────────────────┤
-│ user-service     → PostgreSQL (users)       │
-│ order-service    → PostgreSQL (orders)      │
-│ payment-service  → PostgreSQL (payments)    │
-│ catalog-service  → PostgreSQL (products)    │
-│ notification-svc → MongoDB (notifications)  │
-│ analytics-svc    → ClickHouse (events)      │
-└─────────────────────────────────────────────┘
-
-Communication: Events via RabbitMQ/Kafka
-```
+- Start with 1-2 high-value domains.
+- Add generators/templates for new domain modules.
+- Track coupling metrics and refactor hot paths.
 
 ## Decision Matrix
 
-| Decision | Choice | Reason |
-|----------|--------|--------|
-| Monorepo Tool | Turborepo | Speed, caching |
-| Package Manager | pnpm | Disk space, speed |
-| Frontend | Next.js 14+ | RSC, performance |
-| State (Server) | TanStack Query | Caching, sync |
-| State (Client) | Zustand | Simplicity |
-| Backend | NestJS | DDD support |
-| Database | PostgreSQL | ACID, reliability |
-| Events | RabbitMQ | Reliability |
-| API Gateway | Kong/NestJS | Flexibility |
-| Auth | Keycloak | Enterprise ready |
+- Need independent scaling per domain: choose DDD.
+- Need strict module ownership across teams: choose DDD.
+- Need fastest delivery on small scope: avoid DDD for now.
 
-## Quick Start
+## Output Requirements for Agent
 
-```bash
-# Clone template
-npx degit Alicoder001/enterprise-template my-project
-
-# Install dependencies
-cd my-project && pnpm install
-
-# Start development
-pnpm dev
-```
+- Propose target domain map.
+- Provide import/event boundary rules.
+- Provide migration plan from current structure to target structure.
+- Include risks, rollback plan, and testing strategy.
 
 ## References
 
-- [Domain-Driven Design](https://martinfowler.com/bliki/DomainDrivenDesign.html)
-- [Feature-Sliced Design](https://feature-sliced.design/)
-- [Turborepo](https://turbo.build/repo)
-- [NestJS Microservices](https://docs.nestjs.com/microservices/basics)
+- Detailed structures, code templates, generators, and examples: `references/guide.md`

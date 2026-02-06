@@ -1,0 +1,4 @@
+version: 1
+display_name: "Workflow"
+short_description: "AI agent operational rules including token discipline, navigation-first approach, and output contracts. Use to ensure efficient and predi..."
+default_prompt: "Use this skill when: AI agent operational rules including token discipline, navigation-first approach, and output contracts. Use to ensure efficient and predictable agent behavior during development tasks."

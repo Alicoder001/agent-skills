@@ -9,7 +9,8 @@ if (!fs.existsSync(configPath)) {
   process.exit(1);
 }
 
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+const rawConfig = fs.readFileSync(configPath, 'utf8').replace(/^\uFEFF/, '');
+const config = JSON.parse(rawConfig);
 const repo = config.repo || 'Alicoder001/agent-skills';
 
 const selected = new Set(config.mandatory || []);

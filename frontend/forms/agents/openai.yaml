@@ -1,0 +1,4 @@
+version: 1
+display_name: "Forms"
+short_description: "React form handling with React Hook Form and Zod validation. Use when building complex forms, multi-step forms, or any form with validati..."
+default_prompt: "Use this skill when: React form handling with React Hook Form and Zod validation. Use when building complex forms, multi-step forms, or any form with validation requirements."

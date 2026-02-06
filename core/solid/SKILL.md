@@ -5,373 +5,60 @@ description: SOLID, DRY, KISS, and clean code principles for TypeScript applicat
 
 # Clean Code Principles
 
-> SOLID, DRY, KISS, and best practices for maintainable code.
-
-## Principles Overview
-
-| Principle | Meaning |
-|-----------|---------|
-| **S**ingle Responsibility | One class/function = one job |
-| **O**pen/Closed | Open for extension, closed for modification |
-| **L**iskov Substitution | Subtypes must be substitutable |
-| **I**nterface Segregation | Many specific interfaces > one general |
-| **D**ependency Inversion | Depend on abstractions, not concretions |
-| **DRY** | Don't Repeat Yourself |
-| **KISS** | Keep It Simple, Stupid |
-| **YAGNI** | You Ain't Gonna Need It |
-
-## Instructions
-
-### 1. Single Responsibility Principle (SRP)
-
-```typescript
-// ❌ Bad - Multiple responsibilities
-class UserService {
-  createUser(data: CreateUserDto) { /* ... */ }
-  sendWelcomeEmail(user: User) { /* ... */ }
-  generateReport(users: User[]) { /* ... */ }
-  validatePassword(password: string) { /* ... */ }
-}
-
-// ✅ Good - Separated concerns
-class UserService {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly emailService: EmailService,
-  ) {}
-
-  async createUser(data: CreateUserDto): Promise<User> {
-    const user = await this.userRepository.create(data);
-    await this.emailService.sendWelcome(user);
-    return user;
-  }
-}
-
-class EmailService {
-  sendWelcome(user: User) { /* ... */ }
-  sendPasswordReset(user: User) { /* ... */ }
-}
-
-class ReportService {
-  generateUserReport(users: User[]) { /* ... */ }
-}
-```
-
-### 2. Open/Closed Principle (OCP)
-
-```typescript
-// ❌ Bad - Modifying existing code for new features
-class PaymentProcessor {
-  process(type: string, amount: number) {
-    if (type === 'credit') {
-      // process credit
-    } else if (type === 'paypal') {
-      // process paypal
-    } else if (type === 'crypto') {
-      // Adding new payment = modifying this class
-    }
-  }
-}
-
-// ✅ Good - Extend without modification
-interface PaymentMethod {
-  process(amount: number): Promise<PaymentResult>;
-}
-
-class CreditCardPayment implements PaymentMethod {
-  async process(amount: number) { /* ... */ }
-}
-
-class PayPalPayment implements PaymentMethod {
-  async process(amount: number) { /* ... */ }
-}
-
-class CryptoPayment implements PaymentMethod {
-  async process(amount: number) { /* ... */ }
-}
-
-class PaymentProcessor {
-  constructor(private paymentMethod: PaymentMethod) {}
-
-  async process(amount: number) {
-    return this.paymentMethod.process(amount);
-  }
-}
-```
-
-### 3. Liskov Substitution Principle (LSP)
-
-```typescript
-// ❌ Bad - Subtype changes behavior unexpectedly
-class Rectangle {
-  constructor(protected width: number, protected height: number) {}
-  setWidth(w: number) { this.width = w; }
-  setHeight(h: number) { this.height = h; }
-  getArea() { return this.width * this.height; }
-}
-
-class Square extends Rectangle {
-  setWidth(w: number) {
-    this.width = w;
-    this.height = w; // Breaks LSP - unexpected behavior
-  }
-}
-
-// ✅ Good - Use composition or proper abstraction
-interface Shape {
-  getArea(): number;
-}
-
-class Rectangle implements Shape {
-  constructor(private width: number, private height: number) {}
-  getArea() { return this.width * this.height; }
-}
-
-class Square implements Shape {
-  constructor(private side: number) {}
-  getArea() { return this.side * this.side; }
-}
-```
-
-### 4. Interface Segregation Principle (ISP)
-
-```typescript
-// ❌ Bad - Fat interface
-interface Worker {
-  work(): void;
-  eat(): void;
-  sleep(): void;
-  code(): void;
-  manage(): void;
-}
-
-// Robot can't eat/sleep, Manager can't code
-
-// ✅ Good - Segregated interfaces
-interface Workable {
-  work(): void;
-}
-
-interface Eatable {
-  eat(): void;
-}
-
-interface Codeable {
-  code(): void;
-}
-
-interface Manageable {
-  manage(): void;
-}
-
-class Developer implements Workable, Eatable, Codeable {
-  work() { /* ... */ }
-  eat() { /* ... */ }
-  code() { /* ... */ }
-}
-
-class Robot implements Workable, Codeable {
-  work() { /* ... */ }
-  code() { /* ... */ }
-}
-```
-
-### 5. Dependency Inversion Principle (DIP)
-
-```typescript
-// ❌ Bad - High-level depends on low-level
-class UserService {
-  private database = new MySQLDatabase(); // Concrete dependency
-
-  getUser(id: string) {
-    return this.database.query(`SELECT * FROM users WHERE id = ${id}`);
-  }
-}
-
-// ✅ Good - Depend on abstractions
-interface Database {
-  query<T>(sql: string): Promise<T>;
-}
-
-interface UserRepository {
-  findById(id: string): Promise<User | null>;
-}
-
-class MySQLUserRepository implements UserRepository {
-  constructor(private db: Database) {}
-
-  async findById(id: string) {
-    return this.db.query<User>(`SELECT * FROM users WHERE id = ?`, [id]);
-  }
-}
-
-class UserService {
-  constructor(private userRepo: UserRepository) {} // Abstraction
-
-  async getUser(id: string) {
-    return this.userRepo.findById(id);
-  }
-}
-
-// Dependency injection
-const userService = new UserService(new MySQLUserRepository(database));
-```
-
-### 6. DRY (Don't Repeat Yourself)
-
-```typescript
-// ❌ Bad - Repeated logic
-function validateEmail(email: string) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!regex.test(email)) throw new Error('Invalid email');
-}
-
-function validateUserEmail(email: string) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!regex.test(email)) throw new Error('Invalid email');
-}
-
-// ✅ Good - Single source of truth
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function isValidEmail(email: string): boolean {
-  return EMAIL_REGEX.test(email);
-}
-
-function validateEmail(email: string): void {
-  if (!isValidEmail(email)) {
-    throw new Error('Invalid email');
-  }
-}
-```
-
-### 7. KISS (Keep It Simple, Stupid)
-
-```typescript
-// ❌ Bad - Over-engineered
-class UserNameFormatter {
-  private strategies: Map<string, FormatterStrategy>;
-  
-  constructor() {
-    this.strategies = new Map();
-    this.strategies.set('full', new FullNameStrategy());
-    this.strategies.set('initials', new InitialsStrategy());
-  }
-  
-  format(user: User, type: string) {
-    return this.strategies.get(type)?.format(user);
-  }
-}
-
-// ✅ Good - Simple and clear
-function formatUserName(user: User, format: 'full' | 'initials'): string {
-  if (format === 'full') {
-    return `${user.firstName} ${user.lastName}`;
-  }
-  return `${user.firstName[0]}. ${user.lastName[0]}.`;
-}
-```
-
-### 8. YAGNI (You Ain't Gonna Need It)
-
-```typescript
-// ❌ Bad - Building for hypothetical future
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  // "We might need these later"
-  socialSecurityNumber?: string;
-  bloodType?: string;
-  favoriteColor?: string;
-  mothersMaidenName?: string;
-}
-
-// ✅ Good - Build what you need now
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-// Add fields when actually needed
-```
-
-### 9. Clean Functions
-
-```typescript
-// ❌ Bad
-function process(d: any, t: string, f: boolean) {
-  // What do d, t, f mean?
-}
-
-// ✅ Good
-function processPayment(
-  paymentData: PaymentData,
-  transactionType: TransactionType,
-  shouldNotifyUser: boolean
-): PaymentResult {
-  // Clear intent
-}
-
-// ❌ Bad - Too many parameters
-function createUser(name, email, age, role, department, manager, salary) {}
-
-// ✅ Good - Use object parameter
-interface CreateUserParams {
-  name: string;
-  email: string;
-  age: number;
-  role: Role;
-  department?: string;
-  managerId?: string;
-}
-
-function createUser(params: CreateUserParams): User {}
-```
-
-### 10. Composition Over Inheritance
-
-```typescript
-// ❌ Bad - Deep inheritance
-class Animal { }
-class Mammal extends Animal { }
-class Dog extends Mammal { }
-class GermanShepherd extends Dog { }
-
-// ✅ Good - Composition
-interface Walkable {
-  walk(): void;
-}
-
-interface Swimmable {
-  swim(): void;
-}
-
-class Dog implements Walkable {
-  walk() { console.log('Walking'); }
-}
-
-class Duck implements Walkable, Swimmable {
-  walk() { console.log('Waddling'); }
-  swim() { console.log('Swimming'); }
-}
-```
-
-## Quick Reference
-
-| Principle | Question to Ask |
-|-----------|-----------------|
-| SRP | Does this class/function do only one thing? |
-| OCP | Can I add features without modifying existing code? |
-| LSP | Can I substitute a subtype without breaking anything? |
-| ISP | Are my interfaces minimal and focused? |
-| DIP | Am I depending on abstractions, not concretions? |
-| DRY | Is there any duplicated logic? |
-| KISS | Is this the simplest solution? |
-| YAGNI | Do I actually need this right now? |
+> Apply principles as constraints, not dogma. Prefer measurable maintainability over theoretical purity.
+
+## Use This Skill When
+
+- Refactoring complex modules with coupling and duplication.
+- Reviewing architecture decisions or PR quality.
+- Designing reusable TypeScript services/components.
+
+## Principles to Apply
+
+### SOLID
+
+- SRP: one reason to change per unit.
+- OCP: extend behavior without modifying stable core.
+- LSP: subtype must preserve contract behavior.
+- ISP: small consumer-focused interfaces.
+- DIP: depend on abstractions, not concrete details.
+
+### Supporting Rules
+
+- DRY: remove duplicated business logic.
+- KISS: prefer simple control flow and explicit naming.
+- YAGNI: avoid speculative abstractions.
+
+## Refactor Workflow
+
+1. Detect smells:
+- large functions/classes
+- feature envy
+- repeated condition branches
+- temporal coupling
+2. Write/extend tests around current behavior.
+3. Extract boundaries:
+- interfaces
+- services
+- adapters
+4. Reduce responsibilities and dependencies.
+5. Re-run tests and compare behavior.
+
+## Code Review Checklist
+
+- Does this change reduce or increase coupling?
+- Are contracts explicit and stable?
+- Is duplication reduced meaningfully?
+- Are dependencies inverted where needed?
+- Is complexity lower than before?
+
+## Output Requirements for Agent
+
+- Identify concrete smells with file-level evidence.
+- Recommend smallest safe refactor sequence.
+- State tradeoffs and migration risks.
+- Provide test strategy for behavior preservation.
 
 ## References
 
-- [Clean Code by Robert C. Martin](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
-- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- Detailed examples and before/after refactors: `references/guide.md`

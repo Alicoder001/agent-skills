@@ -1,0 +1,4 @@
+version: 1
+display_name: "Solid"
+short_description: "SOLID, DRY, KISS, and clean code principles for TypeScript applications. Use when designing scalable architecture, writing maintainable c..."
+default_prompt: "Use this skill when: SOLID, DRY, KISS, and clean code principles for TypeScript applications. Use when designing scalable architecture, writing maintainable code, or reviewing code quality."

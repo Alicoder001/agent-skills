@@ -68,6 +68,11 @@ Single skill:
 ### Agent Skills
 | Skill | Description | Install |
 |-------|-------------|---------|
+| reasoning | Chain-of-thought patterns | `npx skills add Alicoder001/agent-skills --skill reasoning` |
+| planning | Task decomposition | `npx skills add Alicoder001/agent-skills --skill planning` |
+| memory | Context management | `npx skills add Alicoder001/agent-skills --skill memory` |
+| tools | Tool usage patterns | `npx skills add Alicoder001/agent-skills --skill tools` |
+| collaboration | Multi-agent collaboration | `npx skills add Alicoder001/agent-skills --skill collaboration` |
 | senior | Senior practices | `npx skills add Alicoder001/agent-skills --skill senior` |
 | workflow | Agent workflow | `npx skills add Alicoder001/agent-skills --skill workflow` |
 | find-skills | Skill discovery | `npx skills add Alicoder001/agent-skills --skill find-skills` |

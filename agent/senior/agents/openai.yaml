@@ -1,0 +1,4 @@
+version: 1
+display_name: "Senior"
+short_description: "Senior frontend developer practices including code quality, accessibility, responsive design, and UI consistency. Use when reviewing code..."
+default_prompt: "Use this skill when: Senior frontend developer practices including code quality, accessibility, responsive design, and UI consistency. Use when reviewing code, implementing UX patterns, or ensuring production-quality output."

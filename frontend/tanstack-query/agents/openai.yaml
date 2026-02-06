@@ -1,0 +1,4 @@
+version: 1
+display_name: "Tanstack Query"
+short_description: "TanStack Query (React Query) patterns for data fetching, caching, mutations, and optimistic updates. Use when implementing server state m..."
+default_prompt: "Use this skill when: TanStack Query (React Query) patterns for data fetching, caching, mutations, and optimistic updates. Use when implementing server state management, API caching, or data synchronization in React applications."

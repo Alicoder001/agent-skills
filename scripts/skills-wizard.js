@@ -1,4 +1,4 @@
-﻿const readline = require('readline');
+const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -7,16 +7,17 @@ const rl = readline.createInterface({
 
 const repo = 'Alicoder001/agent-skills';
 
-const mandatory = ['global-config', 'typescript', 'git', 'errors'];
+const mandatory = ['global-config', 'typescript', 'git', 'solid', 'errors'];
 
 const questions = [
   {
     key: 'frontend',
-    prompt: 'Frontend?\n1) Next.js\n2) Vite\n3) None\n> ',
+    prompt: 'Frontend?\n1) Next.js\n2) Vite\n3) Remix\n4) None\n> ',
     options: {
       '1': ['react-core', 'react-nextjs'],
       '2': ['react-core', 'react-vite'],
-      '3': [],
+      '3': ['react-core'],
+      '4': [],
     },
   },
   {
@@ -31,20 +32,32 @@ const questions = [
   },
   {
     key: 'ui',
-    prompt: 'UI library?\n1) Tailwind\n2) shadcn/ui\n3) None\n> ',
+    prompt: 'UI library?\n1) Tailwind\n2) shadcn/ui\n3) MUI\n4) Ant Design\n5) None\n> ',
     options: {
       '1': ['tailwind'],
       '2': ['shadcn'],
-      '3': [],
+      '3': ['design'],
+      '4': ['design'],
+      '5': [],
     },
   },
   {
     key: 'backend',
-    prompt: 'Backend?\n1) NestJS\n2) Express\n3) None\n> ',
+    prompt: 'Backend?\n1) NestJS\n2) Express\n3) Next.js API Routes\n4) Hono\n5) None\n> ',
     options: {
       '1': ['nestjs', 'api-patterns', 'security'],
       '2': ['api-patterns', 'security'],
-      '3': [],
+      '3': ['api-patterns', 'security'],
+      '4': ['api-patterns', 'security'],
+      '5': [],
+    },
+  },
+  {
+    key: 'forms',
+    prompt: 'Forms?\n1) Yes\n2) No\n> ',
+    options: {
+      '1': ['forms'],
+      '2': [],
     },
   },
   {
@@ -97,23 +110,27 @@ function finish() {
     skills.forEach((s) => selected.add(s));
   });
 
-  const skillList = Array.from(selected);
+  const skillList = Array.from(selected).sort();
 
   console.log('\n--- Summary ---');
   console.log('Mandatory:', mandatory.join(', '));
   const optional = skillList.filter((s) => !mandatory.includes(s));
   console.log('Selected:', optional.length ? optional.join(', ') : '(none)');
 
-  const lines = [
-    `npx skills add ${repo} \\\n  ${skillList.map((s, i) => `--skill ${s}${i === skillList.length - 1 ? '' : ' \\\n  '}`).join('')}`,
-  ];
+  const installCmd = `npx skills add ${repo} ${skillList.map((s) => `--skill ${s}`).join(' ')}`;
 
   console.log('\nInstall command:');
-  console.log(lines.join('\n'));
+  console.log(installCmd);
+
+  console.log('\nPer-skill commands:');
+  skillList.forEach((skill) => {
+    console.log(`npx skills add ${repo} --skill ${skill}`);
+  });
+
   rl.close();
 }
 
-console.log('Welcome! Let\'s pick skills for your project.\n');
+console.log("Welcome! Let's pick skills for your project.\n");
 console.log('Mandatory skills (auto-added):');
 mandatory.forEach((s) => console.log(`- ${s}`));
 console.log('');

@@ -1,0 +1,4 @@
+version: 1
+display_name: "Shadcn"
+short_description: "shadcn/ui component library patterns including installation, customization, theming, and composition. Use when building UI with shadcn/ui..."
+default_prompt: "Use this skill when: shadcn/ui component library patterns including installation, customization, theming, and composition. Use when building UI with shadcn/ui components in React/Next.js applications."

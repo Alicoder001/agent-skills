@@ -1,0 +1,4 @@
+version: 1
+display_name: "Testing"
+short_description: "Testing strategies for JavaScript applications. Use when writing unit tests, integration tests, or setting up testing infrastructure. Cov..."
+default_prompt: "Use this skill when: Testing strategies for JavaScript applications. Use when writing unit tests, integration tests, or setting up testing infrastructure. Covers Vitest, Jest, React Testing Library, and mocking patterns."

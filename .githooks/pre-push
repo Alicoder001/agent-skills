@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -e
+
+node scripts/generate-openai-yaml.js
+node scripts/validate-skills.js
+node scripts/run-trigger-evals.js

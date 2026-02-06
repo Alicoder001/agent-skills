@@ -1,0 +1,4 @@
+version: 1
+display_name: "Design"
+short_description: "UI design guidelines for web apps covering layout, typography, color, spacing, and component consistency. Use when defining or reviewing ..."
+default_prompt: "Use this skill when: UI design guidelines for web apps covering layout, typography, color, spacing, and component consistency. Use when defining or reviewing UI/UX design systems, page layouts, or visual hierarchy."

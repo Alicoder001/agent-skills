@@ -1,0 +1,4 @@
+version: 1
+display_name: "React Core"
+short_description: "React component patterns, hooks, state management, and Vercel-inspired performance optimizations. Use for React development including re-..."
+default_prompt: "Use this skill when: React component patterns, hooks, state management, and Vercel-inspired performance optimizations. Use for React development including re-render prevention, derived state, functional setState, and component composition."

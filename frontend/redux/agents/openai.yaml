@@ -1,0 +1,4 @@
+version: 1
+display_name: "Redux"
+short_description: "Redux Toolkit and RTK Query patterns for state management. Use for global state, API caching, and complex state logic. Includes slices, t..."
+default_prompt: "Use this skill when: Redux Toolkit and RTK Query patterns for state management. Use for global state, API caching, and complex state logic. Includes slices, thunks, and query endpoints."

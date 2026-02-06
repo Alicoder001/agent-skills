@@ -1,0 +1,4 @@
+version: 1
+display_name: "React Hooks"
+short_description: "Custom React hooks patterns including useDebounce, useLocalStorage, useMediaQuery, useClickOutside, and more. Use when creating reusable ..."
+default_prompt: "Use this skill when: Custom React hooks patterns including useDebounce, useLocalStorage, useMediaQuery, useClickOutside, and more. Use when creating reusable hook logic or implementing common UI patterns."

@@ -86,14 +86,8 @@
     "agent-professional": {
       "name": "Professional Agent",
       "description": "Complete AI agent capabilities for advanced workflows",
-      "includes": ["essential"],
+      "includes": ["essential", "agent"],
       "skills": [
-        "agent/reasoning",
-        "agent/planning",
-        "agent/memory",
-        "agent/tools",
-        "agent/collaboration",
-        "agent/workflow",
         "agent/senior"
       ]
     }

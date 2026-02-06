@@ -1,0 +1,4 @@
+version: 1
+display_name: "Errors"
+short_description: "Error handling patterns for robust applications. Use when implementing try-catch blocks, error boundaries, custom errors, or logging. Cov..."
+default_prompt: "Use this skill when: Error handling patterns for robust applications. Use when implementing try-catch blocks, error boundaries, custom errors, or logging. Covers async errors, React error boundaries, and API error responses."

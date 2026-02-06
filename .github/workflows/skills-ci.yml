@@ -1,0 +1,33 @@
+name: Skills CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate openai.yaml metadata
+        run: node scripts/generate-openai-yaml.js
+
+      - name: Verify metadata is committed
+        run: git diff --exit-code
+
+      - name: Validate skill catalog
+        run: node scripts/validate-skills.js
+
+      - name: Run trigger evals
+        run: node scripts/run-trigger-evals.js

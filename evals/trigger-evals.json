@@ -1,0 +1,50 @@
+{
+  "pass_threshold": 0.9,
+  "none_score_threshold": 4,
+  "cases": [
+    { "id": "agent-collaboration", "prompt": "Need collaboration skill for multi-agent task delegation and coordination.", "expected": "collaboration" },
+    { "id": "agent-find-skills", "prompt": "Find-skills helper is needed to discover which installable skills fit this stack.", "expected": "find-skills" },
+    { "id": "agent-memory", "prompt": "Use memory skill for context prioritization and long-running session retention.", "expected": "memory" },
+    { "id": "agent-planning", "prompt": "Need planning for task decomposition and adaptive execution steps.", "expected": "planning" },
+    { "id": "agent-project-init", "prompt": "Run project-init to generate .agents/CONTEXT.md for this new project.", "expected": "project-init" },
+    { "id": "agent-reasoning", "prompt": "Apply reasoning skill for systematic problem solving before implementation.", "expected": "reasoning" },
+    { "id": "agent-senior", "prompt": "Need senior frontend review patterns for accessibility and production quality.", "expected": "senior" },
+    { "id": "agent-skill-update", "prompt": "Use skill-update workflow to update an existing skill and keep format standards.", "expected": "skill-update" },
+    { "id": "agent-tools", "prompt": "Need tools skill for dynamic tool selection and tool error handling.", "expected": "tools" },
+    { "id": "agent-workflow", "prompt": "Apply workflow rules for token discipline and navigation-first execution.", "expected": "workflow" },
+
+    { "id": "arch-enterprise-ddd", "prompt": "Need enterprise-ddd architecture for bounded contexts, microservices, and event-driven modules.", "expected": "enterprise-ddd" },
+
+    { "id": "backend-api-patterns", "prompt": "Use api-patterns to choose between REST, GraphQL, WebSocket, SSE, and tRPC.", "expected": "api-patterns" },
+    { "id": "backend-nestjs", "prompt": "Need nestjs modular structure with controllers, services, DTOs, and Prisma.", "expected": "nestjs" },
+
+    { "id": "core-errors", "prompt": "Need errors skill for robust error handling in async code and API responses.", "expected": "errors" },
+    { "id": "core-git", "prompt": "Use git skill for conventional commits and commit message consistency.", "expected": "git" },
+    { "id": "core-global-config", "prompt": "Need global-config defaults for interaction style, stack detection, and priority rules.", "expected": "global-config" },
+    { "id": "core-security", "prompt": "Need security best practices for XSS, SQL injection, CSRF, and secrets handling.", "expected": "security" },
+    { "id": "core-solid", "prompt": "Apply solid principles (SOLID, DRY, KISS) for maintainable TypeScript architecture.", "expected": "solid" },
+    { "id": "core-testing", "prompt": "Need testing strategy with unit and integration tests using Vitest/Jest patterns.", "expected": "testing" },
+    { "id": "core-typescript", "prompt": "Need typescript strict mode guidance for generics, naming, and type safety.", "expected": "typescript" },
+    { "id": "core-validation", "prompt": "Use validation skill for Zod runtime schemas and inferred TypeScript types.", "expected": "validation" },
+
+    { "id": "frontend-design", "prompt": "Need design skill for layout, typography, spacing, and visual consistency.", "expected": "design" },
+    { "id": "frontend-forms", "prompt": "Use forms skill for React Hook Form with Zod, including multi-step form validation.", "expected": "forms" },
+    { "id": "frontend-react-core", "prompt": "Need react-core patterns for component composition, hooks, and render optimization.", "expected": "react-core" },
+    { "id": "frontend-react-hooks", "prompt": "Need react-hooks utilities like useDebounce, useLocalStorage, and useClickOutside.", "expected": "react-hooks" },
+    { "id": "frontend-react-nextjs", "prompt": "Use react-nextjs for Next.js app router, server components, and caching strategy.", "expected": "react-nextjs" },
+    { "id": "frontend-react-vite", "prompt": "Need react-vite guidance for Vite SPA setup and client-side routing.", "expected": "react-vite" },
+    { "id": "frontend-redux", "prompt": "Need redux toolkit and RTK Query patterns for global state and API cache.", "expected": "redux" },
+    { "id": "frontend-shadcn", "prompt": "Use shadcn skill for component setup, theming, and composition in React.", "expected": "shadcn" },
+    { "id": "frontend-tailwind", "prompt": "Need tailwind css v4 utility-first patterns and theme customization.", "expected": "tailwind" },
+    { "id": "frontend-tanstack-query", "prompt": "Use tanstack-query for server state caching, mutations, and optimistic updates.", "expected": "tanstack-query" },
+    { "id": "frontend-zustand", "prompt": "Need zustand patterns for lightweight client global state.", "expected": "zustand" },
+
+    { "id": "infra-monorepo", "prompt": "Need monorepo architecture with turborepo and pnpm workspace packages.", "expected": "monorepo" },
+
+    { "id": "perf-javascript", "prompt": "Need javascript performance micro-optimizations for loops, arrays, and caching.", "expected": "javascript" },
+
+    { "id": "negative-unrelated-1", "prompt": "Write a poem about mountains and moonlight in three stanzas.", "expected": null },
+    { "id": "negative-unrelated-2", "prompt": "Give a recipe for making tomato soup with basil.", "expected": null },
+    { "id": "negative-unrelated-3", "prompt": "Explain the history of ancient Rome in simple terms.", "expected": null }
+  ]
+}

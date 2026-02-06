@@ -1,12 +1,13 @@
-﻿{
+{
   "repo": "Alicoder001/agent-skills",
-  "mandatory": ["global-config", "typescript", "git", "errors"],
+  "mandatory": ["global-config", "typescript", "git", "solid", "errors"],
   "choices": {
     "frontend": {
       "label": "Frontend",
       "options": {
         "nextjs": ["react-core", "react-nextjs"],
         "vite": ["react-core", "react-vite"],
+        "remix": ["react-core"],
         "none": []
       }
     },
@@ -24,6 +25,8 @@
       "options": {
         "tailwind": ["tailwind"],
         "shadcn": ["shadcn"],
+        "mui": ["design"],
+        "ant-design": ["design"],
         "none": []
       }
     },
@@ -32,7 +35,16 @@
       "options": {
         "nestjs": ["nestjs", "api-patterns", "security"],
         "express": ["api-patterns", "security"],
+        "next-api": ["api-patterns", "security"],
+        "hono": ["api-patterns", "security"],
         "none": []
+      }
+    },
+    "forms": {
+      "label": "Forms",
+      "options": {
+        "yes": ["forms"],
+        "no": []
       }
     },
     "testing": {
@@ -63,6 +75,7 @@
     "state": "tanstack",
     "ui": "tailwind",
     "backend": "nestjs",
+    "forms": "yes",
     "testing": "yes",
     "design": "yes",
     "arch": "monorepo"

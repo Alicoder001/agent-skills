@@ -1,0 +1,4 @@
+version: 1
+display_name: "Reasoning"
+short_description: "Chain-of-thought reasoning, self-reflection, and systematic problem-solving patterns for AI agents. Use before any complex task to ensure..."
+default_prompt: "Use this skill when: Chain-of-thought reasoning, self-reflection, and systematic problem-solving patterns for AI agents. Use before any complex task to ensure logical and accurate solutions."

@@ -1,0 +1,4 @@
+version: 1
+display_name: "Tailwind"
+short_description: "Tailwind CSS v4+ best practices including new CSS-first configuration, theme customization, responsive design, dark mode, and performance..."
+default_prompt: "Use this skill when: Tailwind CSS v4+ best practices including new CSS-first configuration, theme customization, responsive design, dark mode, and performance optimization. Use for modern utility-first CSS styling."

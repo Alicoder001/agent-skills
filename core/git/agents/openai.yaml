@@ -1,0 +1,4 @@
+version: 1
+display_name: "Git"
+short_description: "Conventional Commits standard for consistent commit messages. Use when committing code, reviewing commit history, or setting up git workf..."
+default_prompt: "Use this skill when: Conventional Commits standard for consistent commit messages. Use when committing code, reviewing commit history, or setting up git workflows. Includes commit types, scopes, and breaking change format."
