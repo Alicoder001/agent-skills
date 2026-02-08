@@ -1,0 +1,4 @@
+version: 1
+display_name: "Devops"
+short_description: "Production operations guardrails for Linux server stacks using Docker, Docker Compose, Nginx reverse proxy, PM2 process management, and P..."
+default_prompt: "Use this skill when: Production operations guardrails for Linux server stacks using Docker, Docker Compose, Nginx reverse proxy, PM2 process management, and PostgreSQL administration. Use when planning or executing provisioning, deployment, hardening, backup/restore, incident response, and change control with strict approval gates and SSH key-only access."
