@@ -14,6 +14,8 @@
     { "id": "agent-project-init-en-recovery-2", "prompt": "Regenerate .agents/CONTEXT.md and run setup recovery flow", "expected": "project-init" },
     { "id": "agent-project-init-routing-1", "prompt": "Do project init, context is deleted and setup must be rebuilt", "expected": "project-init" },
     { "id": "agent-project-init-routing-2", "prompt": "Only update global defaults later, first recover context and initialize project mapping", "expected": "project-init" },
+    { "id": "agent-notion-ops-1", "prompt": "Design a Notion workspace to run AI and human task lifecycle with signatures, approvals, and handoffs.", "expected": "notion-ops" },
+    { "id": "agent-notion-ops-2", "prompt": "Audit my Notion control plane for task transitions, work logs, MCP client continuity, and context packet quality.", "expected": "notion-ops" },
     { "id": "agent-reasoning", "prompt": "Before coding, I need a structured reasoning approach to reduce wrong assumptions.", "expected": "reasoning" },
     { "id": "agent-senior", "prompt": "Review this frontend work for accessibility, responsiveness, and production-grade quality.", "expected": "senior" },
     { "id": "agent-skill-update", "prompt": "I changed an existing skill and need to align formatting, versioning, and changelog safely.", "expected": "skill-update" },

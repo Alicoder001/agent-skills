@@ -1,0 +1,4 @@
+version: 1
+display_name: "Notion Ops"
+short_description: "Notion operations control-plane for AI and human delivery teams. Use when designing, setting up, auditing, or running Notion workspaces w..."
+default_prompt: "Use this skill when: Notion operations control-plane for AI and human delivery teams. Use when designing, setting up, auditing, or running Notion workspaces with task lifecycle governance, signatures, approvals, work logs, handoffs, context packets, and MCP client continuity."

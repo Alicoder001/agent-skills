@@ -1,7 +1,7 @@
 {
   "$schema": "https://skills.sh/schemas/bundles.json",
   "name": "agent-skills",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": "Alicoder001",
   "structure": "nested",
   "bundles": {
@@ -78,6 +78,7 @@
         "agent/collaboration",
         "agent/senior",
         "agent/workflow",
+        "agent/notion-ops",
         "agent/find-skills",
         "agent/project-init",
         "agent/skill-update"
@@ -126,7 +127,7 @@
     "agent": {
       "name": "Agent",
       "description": "AI agent behavior",
-      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "senior", "workflow", "find-skills", "project-init", "skill-update"]
+      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "senior", "workflow", "notion-ops", "find-skills", "project-init", "skill-update"]
     }
   }
 }

@@ -75,6 +75,7 @@ Single skill:
 | collaboration | Multi-agent collaboration | `npx skills add Alicoder001/agent-skills --skill collaboration` |
 | senior | Senior practices | `npx skills add Alicoder001/agent-skills --skill senior` |
 | workflow | Agent workflow | `npx skills add Alicoder001/agent-skills --skill workflow` |
+| notion-ops | Notion control-plane operations | `npx skills add Alicoder001/agent-skills --skill notion-ops` |
 | find-skills | Skill discovery | `npx skills add Alicoder001/agent-skills --skill find-skills` |
 | project-init | Project wizard | `npx skills add Alicoder001/agent-skills --skill project-init` |
 | skill-update | Skill versioning | `npx skills add Alicoder001/agent-skills --skill skill-update` |
