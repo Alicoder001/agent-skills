@@ -1,4 +1,5 @@
 version: 1
 display_name: "Testing"
-short_description: "Testing strategies for JavaScript applications. Use when writing unit tests, integration tests, or setting up testing infrastructure. Cov..."
-default_prompt: "Use this skill when: Testing strategies for JavaScript applications. Use when writing unit tests, integration tests, or setting up testing infrastructure. Covers Vitest, Jest, React Testing Library, and mocking patterns."
+short_description: "Unified QA testing architecture for strategy, risk-based planning, functional and non-functional coverage, automation, infrastructure, governance, and metrics."
+default_prompt: "Use this skill when: Unified QA testing architecture for strategy, risk-based planning, functional and non-functional coverage, automation, infrastructure, governance, and metrics across the SDLC."
+

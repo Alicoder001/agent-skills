@@ -1,135 +1,140 @@
 ---
 name: testing
-description: Testing strategies for JavaScript applications. Use when writing unit tests, integration tests, or setting up testing infrastructure. Covers Vitest, Jest, React Testing Library, and mocking patterns.
+description: Unified QA testing architecture for strategy, risk-based planning, functional and non-functional coverage, automation, infrastructure, governance, and metrics across the SDLC.
 ---
 
-# Testing Best Practices
+# Testing Platform
 
-> Comprehensive testing strategies for modern JavaScript.
+> One master QA skill with modular sections for enterprise-grade testing decisions.
 
-## Instructions
+## Scope
 
-### 1. Test Structure (AAA Pattern)
+Use this skill as the single control plane for testing work:
+- test strategy and architecture
+- functional and non-functional planning
+- test automation and CI gating
+- test infrastructure and environment readiness
+- QA governance and evidence quality
+- quality metrics and release risk decisions
 
-```typescript
-describe('UserService', () => {
-  it('should create a new user', async () => {
-    // Arrange
-    const userData = { name: 'John', email: 'john@example.com' };
-    
-    // Act
-    const user = await userService.create(userData);
-    
-    // Assert
-    expect(user.id).toBeDefined();
-    expect(user.name).toBe('John');
-  });
-});
-```
+## Navigation Rule
 
-### 2. Component Testing (React Testing Library)
+Do not load every reference file by default. Start with `references/00-navigation.md`, then open only the section that matches the user request.
 
-```tsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+## Section Map
 
-describe('LoginForm', () => {
-  it('should submit form with credentials', async () => {
-    const onSubmit = vi.fn();
-    render(<LoginForm onSubmit={onSubmit} />);
-    
-    await userEvent.type(screen.getByLabelText('Email'), 'test@example.com');
-    await userEvent.type(screen.getByLabelText('Password'), 'password123');
-    await userEvent.click(screen.getByRole('button', { name: /login/i }));
-    
-    expect(onSubmit).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      password: 'password123'
-    });
-  });
-});
-```
+1. Navigation and routing:
+- `references/00-navigation.md`
 
-### 3. Mocking
+2. Strategy and architecture:
+- `references/01-strategy-architecture.md`
 
-```typescript
-// Mock module
-vi.mock('./api', () => ({
-  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: 'John' })
-}));
+3. Functional testing:
+- `references/02-functional.md`
 
-// Mock function
-const mockFn = vi.fn();
-mockFn.mockReturnValue('result');
-mockFn.mockResolvedValue({ data: [] });
+4. Non-functional testing:
+- `references/03-non-functional.md`
 
-// Spy on method
-const spy = vi.spyOn(console, 'log');
-```
+5. Automation architecture:
+- `references/04-automation.md`
 
-### 4. Async Testing
+6. Infrastructure and environments:
+- `references/05-infrastructure.md`
 
-```typescript
-it('should fetch user data', async () => {
-  const user = await fetchUser(1);
-  
-  expect(user).toEqual({
-    id: 1,
-    name: 'John'
-  });
-});
+7. Governance and controls:
+- `references/06-governance.md`
 
-it('should handle errors', async () => {
-  await expect(fetchUser(-1)).rejects.toThrow('User not found');
-});
-```
+8. Metrics and quality signals:
+- `references/07-metrics.md`
 
-### 5. Test Coverage
+9. Risk management:
+- `references/08-risk-management.md`
 
-```json
-// vitest.config.ts
-{
-  "test": {
-    "coverage": {
-      "provider": "v8",
-      "reporter": ["text", "html"],
-      "exclude": ["node_modules/", "test/"]
-    }
-  }
-}
-```
+10. Capability model and maturity:
+- `references/09-capability-model.md`
 
-### 6. Testing Hooks
+## SDLC Execution Flow
 
-```typescript
-import { renderHook, act } from '@testing-library/react';
+1. Discovery:
+- define quality goals, critical business flows, and constraints
 
-describe('useCounter', () => {
-  it('should increment counter', () => {
-    const { result } = renderHook(() => useCounter());
-    
-    act(() => {
-      result.current.increment();
-    });
-    
-    expect(result.current.count).toBe(1);
-  });
-});
-```
+2. Planning:
+- build risk model, select test scope by risk and change impact
 
-### 7. Test Naming Conventions
+3. Build and integration:
+- apply functional and non-functional plans, wire automation into CI gates
 
-```typescript
-// ✅ Good - descriptive
-it('should return empty array when no users found')
-it('should throw ValidationError when email is invalid')
+4. Pre-release:
+- evaluate governance gates, readiness evidence, and release risk
 
-// ❌ Bad - vague
-it('works correctly')
-it('handles error')
-```
+5. Production feedback:
+- monitor metrics, defect leakage, and incident patterns
+- feed findings back into risk and strategy modules
+
+## Dependency Model
+
+Layer 0 (fundamental):
+- strategy and architecture
+- risk management
+
+Layer 1 (execution core):
+- functional testing
+- non-functional testing
+
+Layer 2 (platform and acceleration):
+- automation
+- infrastructure
+
+Layer 3 (business control):
+- governance
+- metrics
+
+Feedback loop:
+- metrics -> risk reprioritization -> strategy update -> coverage and gate updates
+
+## Capability Policy
+
+Must-have core capabilities:
+- test case generation
+- risk-based prioritization
+- regression impact analysis
+- CI and CD integration logic
+- baseline non-functional checks
+- defect triage and release recommendation
+
+Next maturity capabilities:
+- observability feedback loop
+- performance profiling
+- security scanning orchestration
+- auto-refactoring support for test suite health
+
+## Output Contract
+
+When responding on testing work, return:
+1. Scope and assumptions.
+2. Risk profile and prioritization.
+3. Proposed test architecture and coverage.
+4. Gate plan for CI and release.
+5. Metrics and decision signals.
+6. Next actions in order.
+
+## Non-Negotiable Rules
+
+1. Do not propose 100 percent exhaustive testing; prioritize by risk and impact.
+2. Do not separate test strategy from release and observability feedback loops.
+3. Do not approve release decisions without evidence-backed metrics.
+4. Do not add advanced automation before stabilizing fundamental strategy and risk controls.
 
 ## References
 
-- [Vitest Documentation](https://vitest.dev/)
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+1. [Navigation](references/00-navigation.md)
+2. [Strategy and Architecture](references/01-strategy-architecture.md)
+3. [Functional Testing](references/02-functional.md)
+4. [Non-Functional Testing](references/03-non-functional.md)
+5. [Automation](references/04-automation.md)
+6. [Infrastructure](references/05-infrastructure.md)
+7. [Governance](references/06-governance.md)
+8. [Metrics](references/07-metrics.md)
+9. [Risk Management](references/08-risk-management.md)
+10. [Capability Model](references/09-capability-model.md)
+
