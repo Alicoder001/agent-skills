@@ -53,6 +53,14 @@ For each section:
 `node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-5-final"`
 4. Push only after explicit user confirmation.
 
+## Continuity Rules
+
+1. `section-lock`: Section boshlanganidan keyin shu sectionning `section-audit.md`, `implementation-plan.md`, `tasks.md`, `roadmap.md` va verification tugamaguncha pause qilmaslik.
+2. `full-lock`: Phase 4 boshlanganidan keyin audit scope ichidagi barcha sectionlar verification-complete bo'lmaguncha pause qilmaslik.
+3. Pause faqat ikki holatda mumkin:
+- Critical blocker bor va user qarori shart.
+- User explicit ravishda to'xtatishni buyurdi.
+
 ## Depth Mapping
 
 | Depth | Mandatory Phase Behavior |

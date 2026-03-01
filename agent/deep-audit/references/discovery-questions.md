@@ -51,7 +51,17 @@ Variantlar:
 2. `Exception bilan qattiq`: Faqat aniq exception log bilan davom etish.
 3. `Advisory`: Ogohlantirish bilan davom etish, hard stop yo'q.
 
-## 5. Log Formati
+## 5. Continuity Rejimi
+
+Savol:
+`Jarayonni qaysi to'xtamaslik rejimida yuritamiz?`
+
+Variantlar:
+1. `section-lock` (Tavsiya etiladi): Har section boshlanganidan keyin tugamaguncha to'xtamaslik.
+2. `full-lock`: Refaktor boshlanganidan keyin butun audit scope tugamaguncha to'xtamaslik.
+3. `manual-pause`: Har katta bosqichdan keyin qo'lda tasdiq kutish.
+
+## 6. Log Formati
 
 Tanlangan javoblarni har doim `clarifications.md` ga yozing:
 
@@ -62,5 +72,6 @@ Tanlangan javoblarni har doim `clarifications.md` ga yozing:
 - S2 Scope: <tanlangan variant>
 - S3 Xavf darajasi: <tanlangan variant>
 - S4 Verification: <tanlangan variant>
+- S5 Continuity: <tanlangan variant>
 - Izoh:
 ```

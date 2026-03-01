@@ -32,7 +32,15 @@
 | `medium` | Run phase gate after every phase, allow explicit approved exceptions |
 | `low` | Run phase gate after every phase with reduced scope + smoke checks |
 
-## 5. Exit Criteria
+## 5. Continuity Defaults
+
+| Mode | Default Continuity |
+|---|---|
+| `project` | `full-lock` |
+| `section` | `section-lock` |
+| `feature-trace` | `full-lock` |
+
+## 6. Exit Criteria
 
 ### `project`
 

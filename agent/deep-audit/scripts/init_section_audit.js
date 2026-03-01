@@ -123,6 +123,7 @@ function main() {
 - Owner:
 - Blockers:
 - Last update:
+- Continuity holati:
 `
   );
 

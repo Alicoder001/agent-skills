@@ -8,6 +8,7 @@
 ## Scope
 - Mode: <project|section|feature-trace>
 - Depth: <deep|medium|low>
+- Continuity: <section-lock|full-lock|manual-pause>
 - Target: <scope text>
 - Exclusions: <if any>
 
@@ -80,6 +81,7 @@
 - Blockers:
 - Last update:
 - User confirmation for push:
+- Continuity holati:
 ```
 
 ## 4. Audit-Level `roadmap.md`
@@ -174,6 +176,7 @@
 - Owner:
 - Blockers:
 - Last update:
+- Continuity holati:
 ```
 
 ## 8. Section Package `sections/<nn>-<section-slug>/roadmap.md`

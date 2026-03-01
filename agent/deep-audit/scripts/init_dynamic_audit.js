@@ -5,6 +5,7 @@ const path = require('path');
 
 const VALID_MODES = new Set(['project', 'section', 'feature-trace']);
 const VALID_DEPTHS = new Set(['deep', 'medium', 'low']);
+const VALID_CONTINUITIES = new Set(['section-lock', 'full-lock', 'manual-pause']);
 
 function parseArgs(argv) {
   const args = {};
@@ -62,6 +63,16 @@ function required(args, key) {
   return value;
 }
 
+function resolveContinuity(mode, requested) {
+  if (requested) {
+    if (!VALID_CONTINUITIES.has(requested)) {
+      throw new Error(`Invalid --continuity "${requested}". Use: section-lock | full-lock | manual-pause`);
+    }
+    return requested;
+  }
+  return mode === 'section' ? 'section-lock' : 'full-lock';
+}
+
 function main() {
   const args = parseArgs(process.argv);
   const mode = required(args, 'mode');
@@ -74,6 +85,7 @@ function main() {
   if (!VALID_DEPTHS.has(depth)) {
     throw new Error(`Invalid --depth "${depth}". Use: deep | medium | low`);
   }
+  const continuity = resolveContinuity(mode, args.continuity);
 
   const root = path.resolve(args.root || '.');
   const targetSlug = slugify(scope) || 'target';
@@ -93,6 +105,7 @@ function main() {
 ## Scope
 - Mode: ${mode}
 - Depth: ${depth}
+- Continuity: ${continuity}
 - Target: ${scope}
 - Exclusions:
 
@@ -149,6 +162,7 @@ function main() {
 - Variantlar:
 - Tavsiya etilgan:
 - Foydalanuvchi qarori:
+- S5 Continuity: ${continuity}
 - Izoh:
 `
   );
@@ -191,6 +205,7 @@ function main() {
 - Blockers:
 - Last update:
 - User confirmation for push:
+- Continuity holati: active (${continuity})
 `
   );
 
@@ -214,6 +229,7 @@ function main() {
 
   const output = {
     audit_id: auditId,
+    continuity,
     audit_root: auditRoot,
     sections_dir: sectionsDir,
     section_init_command: `node agent/deep-audit/scripts/init_section_audit.js --audit-root "${auditRoot}" --section "<section-name>" --order <nn>`,

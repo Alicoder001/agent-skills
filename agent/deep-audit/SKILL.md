@@ -1,6 +1,6 @@
 ---
 name: deep-audit
-description: Multi-mode engineering audit and refactor orchestration. Use when you need structured deep, medium, or low audits for (1) a whole project, (2) one section or module, or (3) one feature traced end-to-end across the repository, including clarification questions, system-understanding artifacts, phased section audits, audit-level and section-level work items, and strict verification gates.
+description: Multi-mode engineering audit and refactor orchestration. Use when you need structured deep, medium, or low audits for (1) a whole project, (2) one section or module, or (3) one feature traced end-to-end across the repository, including clarification questions, system-understanding artifacts, phased section audits, audit-level and section-level work items, strict verification gates, and continuity modes that prevent stopping before completion.
 ---
 
 # Deep Audit
@@ -13,10 +13,16 @@ description: Multi-mode engineering audit and refactor orchestration. Use when y
 2. `section`: Audit one bounded area (module, layer, package, service, or folder).
 3. `feature-trace`: Audit one feature across all touched files and layers.
 
-Use depth presets from `references/mode-matrix.md`:
-- `deep`: maximal coverage and root-cause analysis.
-- `medium`: balanced depth and delivery speed.
-- `low`: fast risk scan and prioritized actions.
+Use depth presets from `references/mode-matrix.md`.
+
+## Execution Continuity Modes
+
+1. `section-lock`: Current section boshlanganidan keyin shu section audit + refactor + verification tugamaguncha to'xtamaslik.
+2. `full-lock`: Refaktor boshlanganidan keyin butun audit scope tugamaguncha to'xtamaslik.
+
+Default:
+- `section` mode uchun `section-lock`.
+- `project` va `feature-trace` mode uchun `full-lock`.
 
 ## Clarification Protocol
 
@@ -33,8 +39,7 @@ Use:
 
 1. If the user starts in Uzbek or asks for Uzbek, keep conversation in Uzbek.
 2. Keep clarification questions, options, recommendations, updates, and final reports in Uzbek.
-3. Keep technical tokens unchanged where needed (`typecheck`, `build`, `lint`, file paths, commands).
-4. If language preference is unclear, ask one short language confirmation question before deep audit.
+3. If language preference is unclear, ask one short language confirmation question before deep audit.
 
 ## Required Artifacts
 
@@ -46,10 +51,7 @@ Create these artifacts for every audit run:
 4. `work-items/audits/<audit-id>/implementation-plan.md`
 5. `work-items/audits/<audit-id>/tasks.md`
 6. `work-items/audits/<audit-id>/roadmap.md`
-7. `work-items/audits/<audit-id>/sections/<nn>-<section-slug>/section-audit.md`
-8. `work-items/audits/<audit-id>/sections/<nn>-<section-slug>/implementation-plan.md`
-9. `work-items/audits/<audit-id>/sections/<nn>-<section-slug>/tasks.md`
-10. `work-items/audits/<audit-id>/sections/<nn>-<section-slug>/roadmap.md`
+7. `work-items/audits/<audit-id>/sections/<nn>-<section-slug>/{section-audit.md,implementation-plan.md,tasks.md,roadmap.md}`
 
 Create them quickly with:
 
@@ -72,11 +74,11 @@ Template and checklist details:
 
 ### 1. Discover System Essence First
 
-1. Parse `mode`, `depth`, and exact scope text.
+1. Parse `mode`, `depth`, `continuity`, and scope.
 2. Model project essence: domain goals, core flows, non-functional constraints, and risk appetite.
 3. If scope is unclear, ask user clarifying questions with options and explicit recommendation.
 4. Normalize an `audit-id`: `<mode>-<depth>-<scope-slug>-<stamp>`.
-5. Record assumptions and excluded areas in `audit-map.md`.
+5. Record assumptions, continuity mode, and excluded areas in `audit-map.md`.
 
 ### 2. Run Phase 0 Gate
 
@@ -103,24 +105,13 @@ node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-1-map"
 ### 4. Run Section-by-Section Audit in Phases
 
 1. Create one section package per section inside `sections/`.
-2. Each section package must include:
-- `section-audit.md`
-- `implementation-plan.md`
-- `tasks.md`
-- `roadmap.md`
-3. Process each section in phases (intent -> dependency graph -> findings -> fix options -> confidence).
-4. Document:
-- findings
-- evidence (files and lines)
-- impact
-- root cause
-- recommended fix
-- confidence level
-5. Cover correctness, reliability, security, performance, testability, and maintainability.
-6. Run phase gate after each section:
+2. Process each section in phases (intent -> dependency graph -> findings -> fixes -> confidence).
+3. Keep evidence file-level (`path:line`) and severity-tagged.
+4. Run phase gate after each section:
 ```bash
 node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-2-section-<name>"
 ```
+5. If `section-lock` is active, do not pause until section is verification-complete.
 
 ### 5. Maintain Audit-Level Work Item Pack
 
@@ -134,6 +125,7 @@ node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-2-section-<name
 ```bash
 node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-3-planning"
 ```
+5. If `full-lock` is active, continue directly into implementation until full scope closes.
 
 ### 6. Implement Refactor
 
@@ -159,7 +151,7 @@ node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-5-final"
 
 1. Ensure all required checks in `references/quality-gates.md` pass.
 2. Commit with a conventional message aligned to audit scope.
-3. Push only after gates pass, branch policy allows it, and user confirmation is explicit.
+3. Push only after gates pass, branch policy allows it, and explicit user confirmation exists.
 
 ## Mode Routing Rules
 
@@ -174,21 +166,15 @@ node agent/deep-audit/scripts/run_phase_checks.js --phase "phase-5-final"
 2. Never report findings without file-level evidence.
 3. Never mark audit complete without section phase reports and section-level task/plan/roadmap files.
 4. Never skip phase gate checks (`typecheck`, `build`, `lint`) without recording blocker and user decision.
-5. Never push changes if verification fails.
-6. Never drop known risks; log them in roadmap follow-ups.
+5. Never stop in `section-lock` before current section is verification-complete.
+6. Never stop in `full-lock` before full scope is verification-complete.
+7. Never push changes if verification fails.
+8. Log known risks in roadmap follow-ups.
 
 ## Output Contract
 
-When returning results, report in this order:
-
-1. `Mode and Scope`
-2. `Clarification and System Understanding`
-3. `Audit Map Summary`
-4. `Section Findings by Phase`
-5. `Audit-Level and Section-Level Work Items Created`
-6. `Refactor Changes`
-7. `Verification Results`
-8. `Git Status (commit and push)`
+Return results in order:
+`Mode/Scope -> Clarification -> Map -> Section Findings -> Work Items -> Refactor -> Verification -> Continuity Status -> Git Status`.
 
 ## References
 

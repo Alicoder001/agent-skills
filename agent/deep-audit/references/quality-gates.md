@@ -32,7 +32,20 @@ If a required check command is missing or fails:
 2. Record blocker in `clarifications.md`.
 3. Request user decision with recommended option before continuing.
 
-## 3. Refactor Completion Gate
+## 3. Continuity Gate
+
+Continuity mode must be explicit in `audit-map.md`:
+
+- `section-lock`: active section verification-complete bo'lmaguncha jarayonni to'xtatmaslik.
+- `full-lock`: to'liq scope verification-complete bo'lmaguncha jarayonni to'xtatmaslik.
+
+If continuity breaks without approved reason:
+
+1. Mark gate failed.
+2. Log reason in `clarifications.md`.
+3. Resume immediately from the next unfinished task.
+
+## 4. Refactor Completion Gate
 
 All must pass before declaring implementation complete:
 
@@ -41,7 +54,7 @@ All must pass before declaring implementation complete:
 - New or changed behavior has test coverage or explicit risk note.
 - Audit-level and section-level `implementation-plan.md` and `roadmap.md` reflect final state.
 
-## 4. Verification Gate
+## 5. Verification Gate
 
 Run applicable checks:
 
@@ -53,7 +66,7 @@ Run applicable checks:
 
 Record output summary directly in the final audit report.
 
-## 5. Git Gate
+## 6. Git Gate
 
 Before commit:
 

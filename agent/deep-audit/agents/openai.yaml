@@ -1,4 +1,4 @@
 version: 1
 display_name: "Deep Audit"
 short_description: "Multi-mode engineering audit and refactor orchestration. Use when you need structured deep, medium, or low audits for (1) a whole project..."
-default_prompt: "Use this skill when: Multi-mode engineering audit and refactor orchestration. Use when you need structured deep, medium, or low audits for (1) a whole project, (2) one section or module, or (3) one feature traced end-to-end across the repository, including clarification questions, system-understanding artifacts, phased section audits, audit-level and section-level work items, and strict verification gates."
+default_prompt: "Use this skill when: Multi-mode engineering audit and refactor orchestration. Use when you need structured deep, medium, or low audits for (1) a whole project, (2) one section or module, or (3) one feature traced end-to-end across the repository, including clarification questions, system-understanding artifacts, phased section audits, audit-level and section-level work items, strict verification gates, and continuity modes that prevent stopping before completion."
