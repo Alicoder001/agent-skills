@@ -5,6 +5,7 @@
     { "id": "agent-collaboration", "prompt": "I need to split a large migration across multiple agents and keep handoffs coordinated.", "expected": "collaboration" },
     { "id": "agent-find-skills", "prompt": "I am on a new stack and need help discovering which installable skills fit this project.", "expected": "find-skills" },
     { "id": "agent-memory", "prompt": "This long task keeps losing context; I need a method to retain key decisions across turns.", "expected": "memory" },
+    { "id": "agent-deep-audit", "prompt": "Run a deep audit of the whole repository, split findings by module, and create refactor work items with roadmap, tasks, and implementation plan.", "expected": "deep-audit" },
     { "id": "agent-planning", "prompt": "Break this complex implementation into sequenced steps with adaptive checkpoints.", "expected": "planning" },
     { "id": "agent-project-init", "prompt": "Initialize a new repo context file with baseline defaults for this project.", "expected": "project-init" },
     { "id": "agent-project-init-recovery", "prompt": "I deleted .agents/CONTEXT.md by mistake, recover setup context and remap required skills.", "expected": "project-init" },

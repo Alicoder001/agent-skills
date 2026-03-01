@@ -73,6 +73,7 @@ Single skill:
 | memory | Context management | `npx skills add Alicoder001/agent-skills --skill memory` |
 | tools | Tool usage patterns | `npx skills add Alicoder001/agent-skills --skill tools` |
 | collaboration | Multi-agent collaboration | `npx skills add Alicoder001/agent-skills --skill collaboration` |
+| deep-audit | Multi-mode deep repository audit | `npx skills add Alicoder001/agent-skills --skill deep-audit` |
 | senior | Senior practices | `npx skills add Alicoder001/agent-skills --skill senior` |
 | workflow | Agent workflow | `npx skills add Alicoder001/agent-skills --skill workflow` |
 | notion-ops | Notion control-plane operations | `npx skills add Alicoder001/agent-skills --skill notion-ops` |

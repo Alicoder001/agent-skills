@@ -4,7 +4,7 @@ Professional AI agent skills for modern software development.
 
 [![skills.sh](https://img.shields.io/badge/skills.sh-published-blue)](https://skills.sh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills: 35](https://img.shields.io/badge/skills-35-green)](.)
+[![Skills: 37](https://img.shields.io/badge/skills-37-green)](.)
 
 ## Quick Start
 
@@ -165,6 +165,7 @@ npx skills add Alicoder001/agent-skills --skill planning
 npx skills add Alicoder001/agent-skills --skill memory
 npx skills add Alicoder001/agent-skills --skill tools
 npx skills add Alicoder001/agent-skills --skill collaboration
+npx skills add Alicoder001/agent-skills --skill deep-audit
 npx skills add Alicoder001/agent-skills --skill workflow
 npx skills add Alicoder001/agent-skills --skill notion-ops
 npx skills add Alicoder001/agent-skills --skill senior
@@ -181,11 +182,11 @@ npx skills add Alicoder001/agent-skills --skill skill-update
 - `arch`: enterprise-ddd
 - `infra`: monorepo
 - `perf`: javascript
-- `agent`: reasoning, planning, memory, tools, collaboration, senior, workflow, notion-ops, find-skills, project-init, skill-update
+- `agent`: reasoning, planning, memory, tools, collaboration, deep-audit, senior, workflow, notion-ops, find-skills, project-init, skill-update
 
 ## Repository Health
 
-- Skills: 35
+- Skills: 37
 - Categories: 7
 - CI: `.github/workflows/skills-ci.yml`
 
