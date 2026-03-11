@@ -79,6 +79,7 @@
         "agent/deep-audit",
         "agent/senior",
         "agent/workflow",
+        "agent/autonomous-delivery",
         "agent/notion-ops",
         "agent/find-skills",
         "agent/project-init",
@@ -128,7 +129,7 @@
     "agent": {
       "name": "Agent",
       "description": "AI agent behavior",
-      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "deep-audit", "senior", "workflow", "notion-ops", "find-skills", "project-init", "skill-update"]
+      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "deep-audit", "senior", "workflow", "autonomous-delivery", "notion-ops", "find-skills", "project-init", "skill-update"]
     }
   }
 }
