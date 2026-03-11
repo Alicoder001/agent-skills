@@ -1,11 +1,11 @@
 ﻿---
 name: skill-update
-description: Skill versioning and update management. Use when updating existing skills, following semantic versioning, and maintaining changelogs.
+description: Skill creation, versioning, and update management. Use when adding a new skill or updating an existing skill, following semantic versioning, maintaining catalogs, and keeping repository-wide skill metadata consistent.
 ---
 
 # Skill Update Manager
 
-> Versioning and changelog management for skills.
+> Skill creation, versioning, and repository consistency management.
 
 ## Semantic Versioning
 
@@ -63,6 +63,32 @@ C:\Users\coder\agent-skills\<category>\<skill>\SKILL.md
 - Ensure install commands use `--skill <name>`
 - Confirm bundles and tables still match actual folders
 
+## New Skill and Catalog Impact Checklist
+
+When adding a new skill, do not stop at creating the skill folder.
+
+Check and update the relevant repository surfaces:
+- `agent/<skill>/SKILL.md`
+- `agent/<skill>/agents/openai.yaml`
+- `README.md` skill counts and install examples if affected
+- `bundles.json` if the skill belongs in a bundle or category
+- `agent/find-skills/SKILL.md` if the discoverability table should include it
+- `evals/trigger-evals.json` if trigger coverage needs to be extended
+- Any repo-specific config or catalog files that drive installation or discovery
+
+If one of these does not need a change, say so explicitly in the final summary.
+
+## Final Response Contract
+
+When finishing a skill creation or skill update task, always end with:
+
+1. The install command for the new or updated skill
+2. The list of repository files and catalogs that were updated
+3. The list of repository files and catalogs that were checked but did not need changes
+4. Any follow-up update the maintainer may still want to make
+
+Use concrete paths and commands. Do not end with a vague "done" summary.
+
 ## Skill Format Standard
 
 ```yaml
@@ -95,6 +121,17 @@ Changes:
 1. Add Suspense section
 2. Add Error Boundary examples
 3. Update README changelog
+
+Install:
+- npx skills add Alicoder001/agent-skills --skill react-core
+
+Updated catalogs:
+- README.md
+- agent/find-skills/SKILL.md
+- bundles.json
+
+Checked, no change needed:
+- evals/trigger-evals.json
 ```
 
 ## References
