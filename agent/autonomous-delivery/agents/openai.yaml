@@ -1,0 +1,4 @@
+version: 1
+display_name: "Autonomous Delivery"
+short_description: "Ultra strict one-pass project delivery with phased tasks and upfront blocker intake."
+default_prompt: "Use this skill when the user explicitly wants the project finished in one pass with minimal interruption, a real phased TASKS.md board, upfront blocker collection, and only a final report."

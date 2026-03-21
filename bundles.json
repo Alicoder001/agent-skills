@@ -79,6 +79,7 @@
         "agent/deep-audit",
         "agent/senior",
         "agent/workflow",
+        "agent/autonomous-delivery",
         "agent/notion-ops",
         "agent/find-skills",
         "agent/project-init",

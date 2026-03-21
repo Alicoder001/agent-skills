@@ -76,6 +76,7 @@ Single skill:
 | deep-audit | Multi-mode deep repository audit | `npx skills add Alicoder001/agent-skills --skill deep-audit` |
 | senior | Senior practices | `npx skills add Alicoder001/agent-skills --skill senior` |
 | workflow | Agent workflow | `npx skills add Alicoder001/agent-skills --skill workflow` |
+| autonomous-delivery | Ultra strict one-pass project delivery | `npx skills add Alicoder001/agent-skills --skill autonomous-delivery` |
 | notion-ops | Notion control-plane operations | `npx skills add Alicoder001/agent-skills --skill notion-ops` |
 | find-skills | Skill discovery | `npx skills add Alicoder001/agent-skills --skill find-skills` |
 | project-init | Project wizard | `npx skills add Alicoder001/agent-skills --skill project-init` |
