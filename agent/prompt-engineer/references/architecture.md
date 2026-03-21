@@ -2,175 +2,125 @@
 
 ## 1. The Enforcement Pyramid
 
-```
-   HOOKS (Layer 0)      100% guaranteed, deterministic
-   CLAUDE.md (Layer 1)  ~85% reliable, loaded every session
-   SKILLS (Layer 3)     On-demand, loaded when triggered
-   DOCS (Layer 4)       Reference, loaded when pointed to
+```text
+Hooks / scripts / settings   100% deterministic when correctly configured
+CLAUDE.md / AGENTS.md        project-wide default behavior
+Skills                       on-demand knowledge and templates
+Docs                         reference material
 ```
 
 | Behavior | Correct Level | Why |
 |----------|---------------|-----|
-| Run lint after file edit | **Hook** | Must happen every time, zero exceptions |
-| Read progress.md at session start | **CLAUDE.md** | Must happen every session |
-| Update todo.md after each step | **CLAUDE.md** | Must happen every session |
-| Create HANDOFF.md at 50% context | **CLAUDE.md** | Must happen every session |
-| How to write a CLAUDE.md | **Skill** | Only needed when designing config |
-| API conventions for this project | **Docs** | Only needed when touching API |
+| Run formatting after file edits | Hook | deterministic |
+| Read progress/todo at session start | CLAUDE.md + optional SessionStart hook | expected every session |
+| Preserve state before compaction | PreCompact hook | deterministic |
+| Prevent stale handoff claims | SessionEnd/Stop hook or verification script | deterministic |
+| How to design prompt files | Skill | on-demand knowledge |
 
-**Priority when rules conflict:** Hook > CLAUDE.md MUST/NEVER > Skill > Docs > Training.
+## 2. Progressive Disclosure Stack
 
-## 2. The 4-Layer Progressive Disclosure Stack
+### Layer 1: CLAUDE.md
 
-### Layer 1: CLAUDE.md (~500 tokens, always loaded)
+Keep short. Include:
 
-**Include:** Stack, commands, hard rules (MUST/NEVER), session protocol, compaction rules, skill/doc pointers.
+- stack
+- commands
+- hard rules
+- session protocol
+- compaction rules
+- references to docs/skills
 
-**Exclude:** Tool-enforceable rules (ESLint/Prettier/TSC), standard conventions, detailed docs, file descriptions, vague instructions.
+### Layer 2: Docs
 
-**Adherence:** 60 lines = peak. Bullet-points 40% better than paragraphs. MUST/NEVER > "prefer"/"try".
+Put domain gotchas and implementation details here.
 
-### Layer 2: Docs (~200-500 tokens each, on-demand)
+### Layer 3: Skills
 
-Domain gotchas, edge cases, project learnings. CLAUDE.md MUST contain: "IMPORTANT: Read relevant docs before starting tasks."
+Use for design knowledge, audit logic, and reusable templates.
 
-### Layer 3: Skills (~20 tokens frontmatter at startup, full on invoke)
+### Layer 4: Hooks / scripts
 
-Keep under 50 lines. Split if larger. Description includes "Use when..." AND "Do NOT use when...".
-
-### Layer 4: Subagents (0 tokens in main context)
-
-Reads 20 files, returns 1-2K summary. Use for research, review, exploration.
+Use for behavior that must happen consistently.
 
 ## 3. Hook Templates
 
-### PostToolUse — Auto-Lint
+### PreCompact - Preserve Current State
 
 ```json
-"PostToolUse": [{
-  "matcher": "Write|Edit",
-  "command": "npx eslint --fix $FILE && npx prettier --write $FILE"
-}]
+{
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"Write-Output '---PROGRESS---'; if (Test-Path _memory/progress.md) { Get-Content _memory/progress.md -TotalCount 40 }; Write-Output '---TODO---'; if (Test-Path _memory/todo.md) { Get-Content _memory/todo.md -TotalCount 40 }; Write-Output '---HANDOFF---'; if (Test-Path HANDOFF.md) { Get-Content HANDOFF.md -TotalCount 60 }\""
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
-### PreCompact — Preserve Context
+### SessionStart - Re-inject Lightweight Context
+
+Use only concise context, not whole documents.
+
+### Stop / SessionEnd - Validate Session State
+
+Use a script that checks whether `progress.md`, `todo.md`, and `HANDOFF.md` are in sync with the current task before declaring automation reliable.
+
+## 4. Verification Script Pattern
+
+Recommended files:
+
+- `scripts/check-session-state.mjs`
+- `.claude/settings.json`
+- `package.json`
+
+Recommended command:
 
 ```json
-"PreCompact": [{
-  "command": "echo '---PRESERVE---' && head -30 _memory/progress.md 2>/dev/null && echo '---END---'"
-}]
+{
+  "scripts": {
+    "check:session-state": "node scripts/check-session-state.mjs"
+  }
+}
 ```
 
-### PreToolUse — Protect Frozen Files
+The script should verify:
 
-```json
-"PreToolUse": [{
-  "matcher": "Write|Edit",
-  "command": "node scripts/check-frozen-files.js $FILE"
-}]
-```
+- required files exist
+- current task appears consistently
+- `HANDOFF.md` is not stale relative to progress/todo
+- required sections are present
 
-## 4. AGENTS.md — Cross-Tool SSOT
+## 5. AGENTS.md as SSOT
 
-```
-AGENTS.md                          <- Single source
-CLAUDE.md                          <- "See AGENTS.md" + short context
-.cursor/rules/                     <- Mirrors AGENTS.md (.mdc)
-.github/copilot-instructions.md   <- Symlink -> AGENTS.md
-.windsurfrules                     <- Synced from AGENTS.md
-```
+Use `AGENTS.md` as the cross-tool single source of truth for workflow and responsibilities. Keep CLAUDE.md shorter and point to AGENTS.md where appropriate.
 
-## 5. Token Budget
+## 6. Token Budget
 
-```
-System prompt + CLAUDE.md:     ~5K   ( 2.5%)
-Skills frontmatter (20):       ~400  ( 0.2%)
-MCP tool schemas:               ~5K  ( 2.5%)
-Available:                    ~190K  (95%)
-Optimal working range:         40-60%
-Dumb zone:                     80%+
-```
-
-| File | Max Lines | Token Estimate |
-|------|-----------|----------------|
-| CLAUDE.md | 60-100 | 300-600 |
-| AGENTS.md | 80-120 | 500-800 |
-| Skill SKILL.md | 30-50 | 200-400 |
-| progress.md | ~40 | ~500 |
-| todo.md | 20 max | ~200 |
-
-## 6. Memory File Hierarchy
-
-```
-~/.claude/CLAUDE.md        Global (all projects)
-./CLAUDE.md                Project root (team-shared, git-tracked)
-./CLAUDE.local.md          Personal overrides (gitignored)
-./subdir/CLAUDE.md         Directory-specific (auto-loaded)
-```
-
-CLAUDE.md supports `@path` imports: `See @docs/api-conventions.md for REST patterns.`
+| File | Max Lines | Goal |
+|------|-----------|------|
+| CLAUDE.md | 60-100 | high signal only |
+| AGENTS.md | 80-120 | workflow + roles |
+| Skill file | 50-120 | compact but actionable |
+| progress.md | ~40 | current reality |
+| todo.md | <= 20 lines preferred | active queue |
 
 ## 7. Bootstrap Templates
 
-### CLAUDE.md Template
+### CLAUDE.md Session Protocol
 
 ```markdown
-# [PROJECT_NAME]
-
-## Stack
-[Framework] + [Language] + [Key deps] — [Package manager]
-
-## Commands
-- Dev: `[command]`
-- Build: `[command]`
-- Test: `[command]`
-- Lint: `[command]`
-
-## Rules (MUST follow)
-- [Rule 1 — concrete, verifiable]
-- [Rule 2 — concrete, verifiable]
-
 ## Session Protocol
-1. START: Read _memory/progress.md + _memory/todo.md (if they exist)
-2. DURING: Update todo.md after completing each step
-3. AT 50% CONTEXT: Create HANDOFF.md (goal, state, blocker, next step, files) then /compact
-4. END: Update progress.md + todo.md before closing
-
-## Compaction Rules
-When compacting, MUST preserve: modified files list, test results, current task, key decisions.
-```
-
-### _memory/progress.md Template
-
-```markdown
-# Project Progress
-
-## Current State
-- Phase: [TBD]
-- Task: [TBD]
-- Status: NOT STARTED
-
-## Completed
-(none yet)
-
-## Key Decisions
-| Date | Decision | Reason |
-|------|----------|--------|
-```
-
-### _memory/todo.md Template
-
-```markdown
-# Current Task
-
-## Todo
-- [ ] (awaiting first task)
-
-## Done
-(none yet)
-
-## Now
-Awaiting first task assignment.
+1. START: Read _memory/progress.md + _memory/todo.md if they exist
+2. DURING: Update todo.md at meaningful milestones
+3. AT 50% CONTEXT: Refresh HANDOFF.md then /compact
+4. END: Update progress.md + todo.md and verify session state
 ```
 
 ### .claude/settings.json Template
@@ -180,26 +130,36 @@ Awaiting first task assignment.
   "hooks": {
     "PreCompact": [
       {
-        "command": "echo '---PRESERVE---' && head -30 _memory/progress.md 2>/dev/null && echo '---END---'"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/check-session-state.mjs --print-context"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/check-session-state.mjs"
+          }
+        ]
       }
     ]
   }
 }
 ```
 
-## 8. Bootstrap Verification
+## 8. Automation Classification
 
-After generating files, verify:
+Use these exact labels in audits:
 
-```
-- [ ] New session: agent reads progress.md + todo.md?
-- [ ] Edit file: lint hook runs?
-- [ ] /compact: progress.md survives?
-- [ ] 50% context: agent creates HANDOFF.md?
-- [ ] End session: agent updates progress.md + todo.md?
+- `documented only`: prompt instructions exist, no deterministic verification
+- `partially enforced`: some hooks/scripts exist, but gaps remain
+- `fully enforced`: hooks/scripts/settings verify the critical workflow
 
-If any fails:
-1. Check CLAUDE.md has Session Protocol section
-2. Check .claude/settings.json has hooks
-3. Check CLAUDE.md is not >100 lines
-```
+Do not label a system "automatic" unless it is at least `partially enforced`, and reserve "reliable automation" for `fully enforced`.
