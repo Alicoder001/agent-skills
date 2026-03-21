@@ -1,0 +1,4 @@
+version: 1
+display_name: "Prompt Engineer"
+short_description: "Professional prompt engineering, context engineering, and AI agent orchestration for coding agents (Claude Code, Codex, Cursor, Gemini CL..."
+default_prompt: "Use this skill when: Professional prompt engineering, context engineering, and AI agent orchestration for coding agents (Claude Code, Codex, Cursor, Gemini CLI). Use when designing CLAUDE.md/AGENTS.md files, writing skills, planning multi-agent pipelines, optimizing token usage, managing session handoffs, or structuring any prompt for maximum agent performance. Do NOT use for general coding tasks or code review."

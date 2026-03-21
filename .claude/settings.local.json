@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:alexop.dev)",
+      "Bash(grep -E \"\\\\.md$|^d\")",
+      "Bash(xargs dirname:*)",
+      "Bash(node scripts/generate-openai-yaml.js)"
+    ]
+  }
+}
