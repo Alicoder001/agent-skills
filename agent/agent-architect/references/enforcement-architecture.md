@@ -258,20 +258,23 @@ When bootstrapping a project, verify ALL of these are present. Missing any = `pa
 
 ```
 scripts/
-  check-phase-entry.mjs      ← entry gate (PHASE_ENTRY_CHECKS filled per phase)
-  check-status-advance.mjs   ← CLOSED write blocker
-  check-truth-gates.mjs      ← project-specific forbidden pattern scan
-  check-session-state.mjs    ← memory file validator
-  plan-phase.sh              ← planning lockdown (--allowedTools restricted)
-  execute-phase.sh           ← execution gated behind entry audit
+  check-phase-entry.mjs      ← entry gate — universal (Node.js)
+  check-status-advance.mjs   ← CLOSED write blocker — Claude Code only (PreToolUse)
+  check-truth-gates.mjs      ← forbidden pattern scan — universal (Node.js)
+  check-session-state.mjs    ← memory file validator — universal (Node.js)
+  plan-phase.sh              ← planning lockdown — universal (post-flight + --allowedTools for Claude)
+  execute-phase.sh           ← execution gate — universal (entry gate before any AI starts)
+  audit-phase.sh             ← closure gate — universal (truth-gates before CLOSED)
 
-.claude/settings.json        ← PreToolUse + PreCompact + SessionEnd hooks wired
-package.json                 ← check:phase-entry, plan:phase, exec:phase scripts
+.claude/settings.json        ← PreToolUse + PreCompact + SessionEnd hooks (Claude Code only)
+package.json                 ← plan:phase, exec:phase, audit:phase, check:* scripts
 _memory/progress.md          ← ≤ 40 lines
 _memory/todo.md              ← ≤ 20 lines
 docs/SPEC.md                 ← Tier 1 discovery output
 _planning/roadmap.md         ← Tier 2 strategic skeleton
 ```
+
+**Codex projects:** `.claude/settings.json` hooks are optional. Enforce `audit:phase` as mandatory closure workflow in `AGENTS.md` iron laws instead.
 
 **Bootstrap command — agent installs everything:**
 
@@ -355,21 +358,28 @@ bootstrap mode: "Set up enforcement layer for [project]"
 }
 ```
 
-**Full enforcement coverage after bootstrap:**
+**Full enforcement coverage — Claude Code vs Codex:**
 
-| Trigger | Script | Layer | What It Blocks |
-|---------|--------|-------|---------------|
-| `PreToolUse` (Write\|Edit) | check-status-advance.mjs | Hook (auto) | CLOSED written without truth-gate pass |
-| `PreCompact` | check-session-state.mjs --print-context | Hook (auto) | Context loss without state preservation |
-| `SessionEnd` | check-session-state.mjs | Hook (auto) | Session end without valid memory files |
-| `pnpm exec:phase N` | execute-phase.sh → check-phase-entry.mjs | Script (enforced) | Phase execution on unverified foundation |
-| `pnpm plan:phase N` | plan-phase.sh → `--allowedTools` | Script (enforced) | Code written during planning session |
-| `pnpm exec:phase N` with empty PHASE_ENTRY_CHECKS | check-phase-entry.mjs | Script (enforced) | Phase N starts without entry checks defined |
-| *(called by check-status-advance.mjs)* | check-truth-gates.mjs | Script (chained) | False CLOSED with forbidden patterns |
+| Trigger | Script | Claude Code | Codex |
+|---------|--------|------------|-------|
+| `pnpm exec:phase N [ai]` | execute-phase.sh → check-phase-entry.mjs | ✅ Blocked | ✅ Blocked |
+| `pnpm plan:phase N [ai]` | plan-phase.sh → post-flight git diff | ✅ Tool-locked + post-flight | ✅ Post-flight only |
+| `pnpm audit:phase N [ai]` | audit-phase.sh → check-truth-gates.mjs | ✅ Required | ✅ Required |
+| `PHASE_ENTRY_CHECKS` empty (phase > 1) | check-phase-entry.mjs exit(1) | ✅ Blocked | ✅ Blocked |
+| `PreToolUse` (Write\|Edit) | check-status-advance.mjs | ✅ Auto hook | ❌ No hook system |
+| `PreCompact` | check-session-state.mjs | ✅ Auto hook | ❌ Manual |
+| `SessionEnd` | check-session-state.mjs | ✅ Auto hook | ❌ Manual |
 
-**Enforcement classification with full setup: `fully enforced`**
-Without `plan-phase.sh` / `execute-phase.sh` wired: `partially enforced`
-Without hooks in settings.json: `documented only`
+**Codex gap:** No PreToolUse hook → agent CAN write CLOSED without `audit-phase.sh` if called directly. Mitigation: enforce `audit:phase` as the only permitted closure workflow in AGENTS.md.
+
+**Enforcement classification:**
+
+| Setup | Claude Code | Codex |
+|-------|------------|-------|
+| All scripts + hooks + shell scripts | `fully enforced` | `partially enforced` |
+| Scripts + shell scripts, no hooks | `partially enforced` | `partially enforced` |
+| Scripts only, no shell scripts | `partially enforced` | `partially enforced` |
+| Prompt instructions only | `documented only` | `documented only` |
 
 ### Session State Check Script Skeleton
 
@@ -503,39 +513,108 @@ console.log(`ENTRY GATE PASSED — Phase ${prevPhase} verified. Phase ${phase} m
 
 Do not call `check-phase-entry.mjs` manually. Wire it into execution scripts so it cannot be skipped:
 
-**`scripts/plan-phase.sh`** — Planning lockdown. Agent can only read/write `.md` files. No code execution.
+**`scripts/plan-phase.sh`** — Planning lockdown. Universal: works for Claude Code and Codex.
 
 ```bash
 #!/usr/bin/env bash
-# Usage: ./scripts/plan-phase.sh N
-# Starts a planning session for Phase N with tool restrictions.
-# Agent MUST output: _planning/phase-N/README.md + PHASE_ENTRY_CHECKS[N+1] update.
+# Usage: ./scripts/plan-phase.sh N [claude|codex]
+# Tier 3: Plan ONE phase with tool lockdown. Post-flight validates no source code written.
 set -e
-PHASE=${1:?Usage: plan-phase.sh N}
-echo "Planning Phase $PHASE — tool lockdown active (Read, Write, Glob, Grep only)"
-claude \
-  --allowedTools "Read,Write,Glob,Grep" \
-  --system "You are writing Phase $PHASE documentation only.
-    Output: _planning/phase-$PHASE/README.md and subphase READMEs.
-    MANDATORY: Also update PHASE_ENTRY_CHECKS[$((PHASE+1))] in scripts/check-phase-entry.mjs.
-    Do NOT write any source code. Do NOT run any shell commands.
-    Do NOT plan Phase $((PHASE+1)) or beyond — only Phase $PHASE." \
-  "Plan Phase $PHASE per _planning/roadmap.md row $PHASE."
+PHASE=${1:?Usage: plan-phase.sh N [claude|codex]}
+AI=${2:-claude}
+PROMPT="PLANNING MODE — Phase $PHASE only.
+Write: _planning/phase-$PHASE/README.md and subphase READMEs.
+MANDATORY: Update PHASE_ENTRY_CHECKS[$((PHASE+1))] in scripts/check-phase-entry.mjs.
+Do NOT write source code. Do NOT plan Phase $((PHASE+1)) or beyond."
+
+echo "Planning Phase $PHASE (AI: $AI) — lockdown active"
+
+case "$AI" in
+  claude)
+    claude --allowedTools "Read,Write,Glob,Grep" --system "$PROMPT" \
+      "Plan Phase $PHASE per _planning/roadmap.md."
+    ;;
+  codex)
+    # Codex has no --allowedTools → use post-flight validation instead
+    codex "$PROMPT Plan Phase $PHASE per _planning/roadmap.md."
+    ;;
+  *)
+    echo "Unknown AI: $AI. Use 'claude' or 'codex'"; exit 1
+    ;;
+esac
+
+# POST-FLIGHT: detect source code written during planning (universal)
+VIOLATIONS=$(git diff --name-only HEAD 2>/dev/null \
+  | grep -vE "\.(md)$|check-phase-entry\.mjs$" | wc -l | tr -d ' ')
+if [ "$VIOLATIONS" -gt 0 ]; then
+  echo "╔══════════════════════════════════════════════════╗"
+  echo "║  PLANNING VIOLATION — source code was modified  ║"
+  echo "╚══════════════════════════════════════════════════╝"
+  git diff --name-only HEAD | grep -vE "\.(md)$|check-phase-entry\.mjs$"
+  echo "Reverting violations..."
+  git diff --name-only HEAD \
+    | grep -vE "\.(md)$|check-phase-entry\.mjs$" \
+    | xargs git checkout HEAD -- 2>/dev/null || true
+  exit 1
+fi
+echo "Planning session CLEAN — only .md files written."
 ```
 
-**`scripts/execute-phase.sh`** — Execution with mandatory entry gate. Cannot be bypassed.
+**`scripts/execute-phase.sh`** — Entry gate + execution. Universal.
 
 ```bash
 #!/usr/bin/env bash
-# Usage: ./scripts/execute-phase.sh N
-# Runs entry gate, then starts execution session. Blocks if gate fails.
+# Usage: ./scripts/execute-phase.sh N [claude|codex]
+# Entry gate runs first. If it exits 1, AI never opens.
 set -e
-PHASE=${1:?Usage: execute-phase.sh N}
+PHASE=${1:?Usage: execute-phase.sh N [claude|codex]}
+AI=${2:-claude}
+
 echo "Running entry gate for Phase $PHASE..."
-node scripts/check-phase-entry.mjs --phase=$PHASE   # exits 1 = blocked, script stops here
-echo "Entry gate PASSED. Starting Phase $PHASE execution."
-claude "Execute Phase $PHASE per _planning/phase-$PHASE/README.md.
-  Read _memory/progress.md first. Run self-check after each task."
+node scripts/check-phase-entry.mjs --phase=$PHASE
+echo "Entry gate PASSED. Starting Phase $PHASE execution (AI: $AI)."
+
+PROMPT="Execute Phase $PHASE per _planning/phase-$PHASE/README.md.
+Read _memory/progress.md first. Run self-check after each task."
+
+case "$AI" in
+  claude) claude "$PROMPT" ;;
+  codex)  codex  "$PROMPT" ;;
+  *)      echo "Unknown AI: $AI"; exit 1 ;;
+esac
+
+node scripts/check-session-state.mjs
+```
+
+**`scripts/audit-phase.sh`** — Explicit closure gate. **Required for Codex** (replaces PreToolUse hook). Also useful for Claude.
+
+```bash
+#!/usr/bin/env bash
+# Usage: ./scripts/audit-phase.sh N [claude|codex]
+# Runs truth-gates, then starts adversarial audit session.
+# CLOSED status MUST NOT be written before this script passes.
+# For Codex: this is the ONLY closure blocker (no PreToolUse hook).
+# For Claude: supplements the PreToolUse hook.
+set -e
+PHASE=${1:?Usage: audit-phase.sh N [claude|codex]}
+AI=${2:-claude}
+
+echo "Running truth-gates for Phase $PHASE closure..."
+node scripts/check-truth-gates.mjs
+echo "Truth-gates PASSED. Starting adversarial audit."
+
+PROMPT="Run adversarial closure audit for Phase $PHASE.
+Truth-gates have passed externally. Now perform:
+1. Adversarial self-audit — assume every claim is false until proven
+2. Roadmap-code alignment check
+3. Status documents match repo truth
+Mark CLOSED only if ALL checks pass with evidence."
+
+case "$AI" in
+  claude) claude "$PROMPT" ;;
+  codex)  codex  "$PROMPT" ;;
+  *)      echo "Unknown AI: $AI"; exit 1 ;;
+esac
 ```
 
 Add to `package.json`:
@@ -543,19 +622,25 @@ Add to `package.json`:
 {
   "scripts": {
     "check:phase-entry": "node scripts/check-phase-entry.mjs",
-    "plan:phase": "bash scripts/plan-phase.sh",
-    "exec:phase": "bash scripts/execute-phase.sh"
+    "plan:phase":        "bash scripts/plan-phase.sh",
+    "exec:phase":        "bash scripts/execute-phase.sh",
+    "audit:phase":       "bash scripts/audit-phase.sh"
   }
 }
 ```
 
 Usage:
 ```bash
-pnpm plan:phase 3       # Plan Phase 3 (tool-locked session)
-pnpm exec:phase 3       # Execute Phase 3 (entry gate runs first, blocks if fail)
-```
+# Claude Code
+pnpm plan:phase 3           # Plan Phase 3 (tool-locked)
+pnpm exec:phase 3           # Execute Phase 3 (entry gate first)
+pnpm audit:phase 3          # Close Phase 3 (truth-gates first)
 
-**Why shell scripts instead of manual commands:** Manual commands can be skipped. Shell scripts cannot — `execute-phase.sh` calls `check-phase-entry.mjs` with `set -e`, so any failure aborts the entire script before Claude starts.
+# Codex
+pnpm plan:phase 3 codex     # Plan Phase 3 (post-flight validated)
+pnpm exec:phase 3 codex     # Execute Phase 3 (entry gate first)
+pnpm audit:phase 3 codex    # Close Phase 3 (truth-gates first)
+```
 
 ---
 

@@ -184,7 +184,8 @@ Checks for the 3-tier progressive planning model (§14 of pipeline-patterns.md).
 | `PHASE_ENTRY_CHECKS` empty for active phases (Phase 2+) | Critical |
 | Entry audit exits 0 when checks are undefined (warn instead of block) | Critical |
 | `execute-phase.sh` missing — entry gate can be skipped manually | Critical |
-| `plan-phase.sh` missing — planning session runs with unrestricted tools | Critical |
+| `audit-phase.sh` missing — CLOSED can be written without truth-gate (Codex: no hook fallback) | Critical |
+| `plan-phase.sh` missing — planning session runs with unrestricted tools, no post-flight check | Critical |
 | `check-status-advance.mjs` missing — CLOSED can be written without truth-gate | Critical |
 | `PreToolUse` hook for Write\|Edit not wired to `check-status-advance.mjs` | High |
 | Phase N documentation did not produce `PHASE_ENTRY_CHECKS[N+1]` | High |

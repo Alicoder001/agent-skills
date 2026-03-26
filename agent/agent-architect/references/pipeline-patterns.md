@@ -437,10 +437,11 @@ Rule:    NEVER write Tier 3 for Phase N+1 before Phase N is VERIFIED.
 ... repeat for each phase — EVERY session must fill PHASE_ENTRY_CHECKS[N+1] ...
 
 [Execution — Phase N Task Executor]
-  Start via: pnpm exec:phase N   (calls execute-phase.sh → check-phase-entry.mjs automatically)
-  If exit 0 → Claude session starts. If exit 1 → BLOCKED before Claude even opens.
-  Then: Execute tasks, run self-checks, run subphase gates, run phase audit.
-  Cannot be bypassed: shell script with set -e aborts on entry gate failure.
+  Start via: pnpm exec:phase N [claude|codex]
+  entry gate runs → if exit 1 → AI never opens (universal, works for Claude and Codex)
+  Then: Execute tasks, run self-checks, run subphase gates.
+  Close via: pnpm audit:phase N [claude|codex]   ← truth-gates run before adversarial audit
+  CLOSED status: allowed only after audit:phase passes (Claude: also blocked by PreToolUse hook)
 ```
 
 ### Why Not Write All Tier 3 Upfront?
