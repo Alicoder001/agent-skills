@@ -1,6 +1,6 @@
 # Session Protocol
 
-## 1. Model Selection Strategy
+## 1. Model Selection & Effort Strategy
 
 | Model | Use For | Cost |
 |-------|---------|------|
@@ -9,6 +9,23 @@
 | **Opus** | Complex architecture, multi-step reasoning, planning, adversarial audits | Highest |
 
 **Default to Sonnet.** Use Opus for architecture design, planning, and verification audits. Use Haiku for subagent research tasks.
+
+### Effort / Thinking Tuning
+
+Claude 4.x models support an `effort` parameter that controls thinking depth and token cost:
+
+| Effort | Use When | Token Cost |
+|--------|----------|------------|
+| `low` | Routine tasks, high-volume operations, latency-sensitive work | Lowest |
+| `medium` | Most coding tasks — good balance of quality and cost | Medium |
+| `high` | Complex reasoning, architecture decisions, verification audits | Higher |
+| `max` | Opus 4.6 only — hardest long-horizon problems | Highest |
+
+**Practical rules:**
+- Set `MAX_THINKING_TOKENS=8000` for routine sessions to cap runaway thinking costs.
+- Claude Opus 4.6 uses **adaptive thinking** — it decides per-message how much to think. Large system prompts can trigger unnecessary thinking. Keep CLAUDE.md lean to reduce over-thinking.
+- For coding subagents doing simple file edits, specify `model: haiku` and `effort: low` in the subagent config.
+- "Overthinking" symptoms: slow responses, thinking tokens dominate cost. Fix: lower effort level or add instruction "Choose an approach and commit to it."
 
 ## 2. Compaction Strategy
 

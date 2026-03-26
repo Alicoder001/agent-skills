@@ -27,7 +27,7 @@ Layer 4: Docs                         → reference material
 
 ## 2. Progressive Disclosure
 
-### Layer 1: CLAUDE.md (target < 100 lines)
+### Layer 1: CLAUDE.md (target < 100 lines, optimal ~72 lines / ~1,900 tokens)
 
 Include only:
 - Stack overview (5-10 lines)
@@ -38,6 +38,8 @@ Include only:
 - References to deeper docs/skills (5 lines)
 
 **Anti-pattern:** CLAUDE.md > 100 lines. Move details to AGENTS.md, phase READMEs, skills, or docs.
+
+**CLAUDE.md vs AGENTS.md overlap:** Never duplicate rules across both files. CLAUDE.md holds project-wide hard rules. AGENTS.md holds workflow, roles, and gates. If a rule appears in both, remove it from the lower-priority file (keep in CLAUDE.md, reference from AGENTS.md).
 
 ### Layer 2: AGENTS.md (target < 150 lines)
 
@@ -313,16 +315,23 @@ console.log('SESSION STATE OK');
 
 ## 8. Token Budget
 
-| File | Target Lines | Purpose |
-|------|-------------|---------|
-| CLAUDE.md | 60-100 | High signal only |
-| AGENTS.md | 80-150 | Workflow + roles + gates |
-| Phase README | 60-120 | Scoped phase guidance |
-| Subphase README | 40-80 | Task scope + exit criteria |
-| Skill file | 50-180 | Compact but actionable |
-| progress.md | ≤ 40 | Current state only |
-| todo.md | ≤ 20 | Active queue only |
-| HANDOFF.md | 30-50 | Session bridge only |
+| File | Target Lines | Approx Tokens | Loaded When | Purpose |
+|------|-------------|--------------|-------------|---------|
+| CLAUDE.md | 60-100 (~72 optimal) | ~1,900 | Every message | High signal only |
+| AGENTS.md | 80-150 | ~3,500 | Every message (if in session protocol) | Workflow + roles + gates |
+| Skill description | 1-3 lines | ~50 per skill | Every message | Progressive disclosure index |
+| Skill full content | 50-500 | varies | On invocation only | On-demand knowledge |
+| Phase README | 60-120 | ~2,500 | At phase start | Scoped phase guidance |
+| Subphase README | 40-80 | ~1,500 | At subphase start | Task scope + exit criteria |
+| progress.md | ≤ 40 | ~800 | Session start | Current state only |
+| todo.md | ≤ 20 | ~400 | Session start | Active queue only |
+| HANDOFF.md | 30-50 | ~1,000 | Session start | Session bridge only |
+
+**Token economics:**
+- A CLAUDE.md of 1,200 lines (~42,000 tokens) costs ~42K tokens on EVERY message, even trivial ones.
+- A CLAUDE.md of 72 lines (~1,900 tokens) benefits from **prompt caching** — Anthropic caches repeated system prompt content, reducing cost by up to 90% on subsequent messages.
+- Skills NOT invoked cost ~50 tokens each (description only). A 500-line skill not needed today = 0 wasted tokens.
+- MCP servers add tool definitions to context even when idle. Each inactive MCP server wastes tokens on every message. Prefer CLI tools when available.
 
 ## 9. Automation Classification
 

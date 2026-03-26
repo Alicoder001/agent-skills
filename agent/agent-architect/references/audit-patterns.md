@@ -34,12 +34,16 @@ Good: `"Use when reviewing code for accessibility, responsive design, or product
 
 | Pattern | Why It Works |
 |---------|-------------|
-| Scoped file/path references | Agent knows exactly where to look |
-| Explicit success criteria | Agent knows when to stop |
+| Scoped file/path references | Agent knows exactly where to look — no broad codebase scanning |
+| Explicit success criteria | Agent knows when to stop — prevents runaway exploration |
 | Verification steps with commands | Agent can self-check deterministically |
 | References to existing patterns | Avoids re-describing whole systems |
 | Concrete examples over abstract rules | Agent matches patterns, not prose |
 | Tables over paragraphs | ~30% fewer tokens, ~40% better adherence |
+| Specific task scope ("add validation to auth.ts") | Prevents broad scanning triggered by vague requests |
+| "Choose an approach and commit to it" | Prevents overthinking in Opus 4.6 adaptive thinking mode |
+
+**Context rot warning:** Model accuracy degrades as token count grows within a session. Long conversations with accumulated file reads, tool outputs, and explorations reduce effective reasoning quality. Compact proactively at logical breakpoints, not only when forced. A fresh context with well-structured HANDOFF.md outperforms a bloated context with full history.
 
 ## 5. CLAUDE.md Anti-Patterns
 
@@ -77,11 +81,14 @@ VERIFICATION
 |-------|----------|
 | Line count > 100 | High |
 | Line count > 200 | Critical |
+| Estimated token count > 5,000 | High |
 | No session protocol section | High |
 | No verification section | High |
 | Tool-enforceable rules trapped in prompts | High |
 | Vague / unverifiable instructions | Medium |
 | Duplicated rules also in AGENTS.md | Medium |
+| Contains detailed workflow docs that belong in skills | Medium |
+| Contains phase/task-specific instructions not needed every session | Medium |
 
 ### 7.2 AGENTS.md Health
 
@@ -100,7 +107,10 @@ VERIFICATION
 | No progressive disclosure — everything in top-level files | Critical |
 | Overlapping skills with unclear boundaries | Medium |
 | No clear trigger language in skill descriptions | High |
-| Skill > 180 lines without references | Medium |
+| Skill > 500 lines without supporting reference files | Medium |
+| Action skills (deploy, commit) missing `disable-model-invocation: true` | High |
+| Heavy research/audit skills missing `context: fork` | Medium |
+| Skills with identical content to CLAUDE.md sections | Medium |
 
 ### 7.4 Session Continuity
 
@@ -124,6 +134,8 @@ VERIFICATION
 | Hook examples unsafe or overly destructive | High |
 | Hook claims not verified with `/hooks` | Medium |
 | Truth-gate script missing when project has "NEVER" rules | Critical |
+| MCP servers configured but never used (idle token waste) | Medium |
+| MCP tool definitions exceed 10% of context window | High |
 
 ### 7.6 Verification Architecture
 

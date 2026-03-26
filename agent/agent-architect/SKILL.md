@@ -19,7 +19,7 @@ Non-negotiable. Every mode, every project, every time.
 | 4 | **Three status states.** IMPLEMENTED → VERIFIED → CLOSED. "DONE" alone is forbidden. | Premature closure |
 | 5 | **Adversarial before closure.** Every claim is suspect until disproven by verification. | Optimistic momentum |
 | 6 | **Roadmap tracks truth, not intent.** Status advances AFTER verification, not after implementation. | Roadmap-code drift |
-| 7 | **Context is finite.** CLAUDE.md < 100 lines. Progressive disclosure. Subagents for research. | Hallucination |
+| 7 | **Context is finite and degrades.** CLAUDE.md < 100 lines (~2K tokens). Progressive disclosure. Subagents for research. Simplest approach first. | Hallucination, context rot |
 | 8 | **Architecture follows discovery.** Never prescribe patterns without understanding constraints. | Wrong fit |
 | 9 | **Separate planning from execution.** Planning → documents. Execution → code. | Scope creep |
 | 10 | **Memory files are compact state.** progress.md ≤ 40, todo.md ≤ 20, HANDOFF.md ≤ 50 lines. | Buried truth |
@@ -92,9 +92,9 @@ For each recommendation: state WHAT, WHY (with evidence), and HOW TO VERIFY.
 
 ## Rules
 
-**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory files become history logs
+**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory files become history logs | duplicate rules across CLAUDE.md and AGENTS.md
 
-**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase as last subphase of every phase
+**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase as last subphase of every phase | estimate token impact of architecture decisions | simplest approach that works
 
 ## Mode Routing
 

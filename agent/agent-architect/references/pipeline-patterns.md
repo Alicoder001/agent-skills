@@ -250,7 +250,38 @@ CLOSED only when ALL exit criteria pass.
 All checks pass → VERIFIED. Any failure → fix and re-check.
 ```
 
-## 8. Parallel Development with Worktrees
+## 8. Skill Frontmatter Patterns
+
+Control when and how skills load to minimize token waste:
+
+| Frontmatter | Effect | Use When |
+|-------------|--------|----------|
+| *(default)* | Description always in context; full content loads on invocation | Reference knowledge Claude should auto-apply |
+| `disable-model-invocation: true` | Description NOT in context; loads only when you type `/name` | Workflows with side effects (deploy, commit, send-slack) |
+| `user-invocable: false` | Claude can auto-load; hidden from `/` menu | Background knowledge users should not invoke manually |
+| `context: fork` | Runs in isolated subagent context | Research, exploration, or operations needing clean context |
+| `model: haiku` | Runs with Haiku model | Simple lookups, file reads, low-complexity operations |
+
+**Token implications:**
+- Default skills: ~50 tokens per skill (description) at session start, full content only on use.
+- `disable-model-invocation: true`: 0 tokens at session start — safest for rarely-used skills.
+- `context: fork`: Runs in isolated context window. The main conversation only receives a summary (~200-500 tokens), not the full exploration.
+
+**When to use `context: fork`:**
+```yaml
+---
+name: deep-audit
+description: Audit codebase for forbidden patterns
+context: fork
+agent: Explore
+---
+Scan the entire codebase for: ...
+Return only findings summary.
+```
+
+The subagent reads thousands of files; your main context gets a 300-token summary.
+
+## 10. Parallel Development with Worktrees
 
 ### Built-in Claude Code Support
 
@@ -292,7 +323,7 @@ model: sonnet
 
 Invoke with `isolation: worktree` for full isolation.
 
-## 9. Fan-Out Pattern (Mass Operations)
+## 11. Fan-Out Pattern (Mass Operations)
 
 ```bash
 # Step 1: Generate task list
@@ -311,7 +342,7 @@ claude -p "Check all migrated files for consistency"
 
 `--allowedTools` restricts capabilities during unattended execution.
 
-## 10. Context Preservation — 3 Living Files
+## 12. Context Preservation — 3 Living Files
 
 | File | Purpose | Max Lines | Update Trigger |
 |------|---------|-----------|---------------|
@@ -321,7 +352,7 @@ claude -p "Check all migrated files for consistency"
 
 These files are the agent's working memory. Keep them compact. Prune aggressively. Never let them become history logs.
 
-## 11. Review Gate Protocol
+## 13. Review Gate Protocol
 
 ### Subphase Gate (after each subphase)
 
