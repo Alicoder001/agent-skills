@@ -420,23 +420,27 @@ Rule:    NEVER write Tier 3 for Phase N+1 before Phase N is VERIFIED.
           Exit criteria must be verifiable, not vague
 
 [Session 3 — Phase 1 Documentation Agent]
-  Input:  roadmap.md (reads Phase 1 row only)
-  Output: _planning/phase-1/README.md + subphase READMEs
-          Defines PHASE_ENTRY_CHECKS[2] in check-phase-entry.mjs
-  Rule:   Full detail only for Phase 1. Stop at Phase 1.
+  Input:   roadmap.md (reads Phase 1 row only)
+  Tools:   Read, Write, Glob, Grep ONLY (run via plan-phase.sh 1)
+  Output:  _planning/phase-1/README.md + subphase READMEs
+  MANDATORY OUTPUT: PHASE_ENTRY_CHECKS[2] filled in check-phase-entry.mjs
+  Rule:    Full detail only for Phase 1. Stop at Phase 1.
+  Failure: If PHASE_ENTRY_CHECKS[2] is not filled → session output is INCOMPLETE.
 
 [Session 4 — Phase 2 Documentation Agent]
-  Input:  roadmap.md + phase-1/README.md (context only)
-  Output: _planning/phase-2/README.md + subphase READMEs
-          Defines PHASE_ENTRY_CHECKS[3] in check-phase-entry.mjs
-  Rule:   Full detail only for Phase 2.
+  Input:   roadmap.md + phase-1/README.md (context only)
+  Tools:   Read, Write, Glob, Grep ONLY (run via plan-phase.sh 2)
+  Output:  _planning/phase-2/README.md + subphase READMEs
+  MANDATORY OUTPUT: PHASE_ENTRY_CHECKS[3] filled in check-phase-entry.mjs
+  Rule:    Full detail only for Phase 2.
 
-... repeat for each phase ...
+... repeat for each phase — EVERY session must fill PHASE_ENTRY_CHECKS[N+1] ...
 
 [Execution — Phase N Task Executor]
-  MANDATORY FIRST STEP: node scripts/check-phase-entry.mjs --phase=N
-  If exit 0 → proceed. If exit 1 → BLOCKED. Fix previous phase first.
+  Start via: pnpm exec:phase N   (calls execute-phase.sh → check-phase-entry.mjs automatically)
+  If exit 0 → Claude session starts. If exit 1 → BLOCKED before Claude even opens.
   Then: Execute tasks, run self-checks, run subphase gates, run phase audit.
+  Cannot be bypassed: shell script with set -e aborts on entry gate failure.
 ```
 
 ### Why Not Write All Tier 3 Upfront?

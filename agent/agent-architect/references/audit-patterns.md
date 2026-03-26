@@ -181,18 +181,24 @@ Checks for the 3-tier progressive planning model (§14 of pipeline-patterns.md).
 |-------|----------|
 | Full phase detail written for ALL phases simultaneously | Critical |
 | Phase execution starts without entry audit script (`check-phase-entry.mjs`) | Critical |
-| `check-phase-entry.mjs` missing or `PHASE_ENTRY_CHECKS` empty for active phases | Critical |
-| Entry audit is documented-only (no script, only prompt instruction) | Critical |
+| `PHASE_ENTRY_CHECKS` empty for active phases (Phase 2+) | Critical |
+| Entry audit exits 0 when checks are undefined (warn instead of block) | Critical |
+| `execute-phase.sh` missing — entry gate can be skipped manually | Critical |
+| `plan-phase.sh` missing — planning session runs with unrestricted tools | Critical |
 | `check-status-advance.mjs` missing — CLOSED can be written without truth-gate | Critical |
 | `PreToolUse` hook for Write\|Edit not wired to `check-status-advance.mjs` | High |
+| Phase N documentation did not produce `PHASE_ENTRY_CHECKS[N+1]` | High |
 | Phase N+1 full detail written before Phase N is VERIFIED | High |
 | Strategic skeleton (Tier 2) contains task-level detail | High |
+| No SPEC.md or discovery document before planning began | High |
 | Entry checks not updated to match previous phase's exit criteria | High |
 | Planning and execution sessions use same agent context | Medium |
-| No SPEC.md or discovery document before planning began | High |
 | Tier 3 documentation written speculatively for phases 3+ ahead | Medium |
 
-**Critical question for any audit:** Can the agent write `CLOSED` to roadmap.md right now without running a script? If yes → enforcement is fiction.
+**3 critical questions for any audit:**
+1. Can the agent write `CLOSED` without running a script? If yes → enforcement is fiction.
+2. Can Phase N start without `execute-phase.sh`? If yes → entry gate is optional.
+3. Are `PHASE_ENTRY_CHECKS` filled for all active phases? If no → next phase is unguarded.
 
 ## 8. Audit Output Requirements
 

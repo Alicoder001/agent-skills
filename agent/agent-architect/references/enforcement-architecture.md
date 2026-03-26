@@ -252,6 +252,35 @@ Keep CLAUDE.md shorter by pointing to AGENTS.md for workflow details.
 
 ## 7. Bootstrap Templates
 
+### Bootstrap Checklist — What Must Exist Before Any Execution
+
+When bootstrapping a project, verify ALL of these are present. Missing any = `partially enforced` at best.
+
+```
+scripts/
+  check-phase-entry.mjs      ← entry gate (PHASE_ENTRY_CHECKS filled per phase)
+  check-status-advance.mjs   ← CLOSED write blocker
+  check-truth-gates.mjs      ← project-specific forbidden pattern scan
+  check-session-state.mjs    ← memory file validator
+  plan-phase.sh              ← planning lockdown (--allowedTools restricted)
+  execute-phase.sh           ← execution gated behind entry audit
+
+.claude/settings.json        ← PreToolUse + PreCompact + SessionEnd hooks wired
+package.json                 ← check:phase-entry, plan:phase, exec:phase scripts
+_memory/progress.md          ← ≤ 40 lines
+_memory/todo.md              ← ≤ 20 lines
+docs/SPEC.md                 ← Tier 1 discovery output
+_planning/roadmap.md         ← Tier 2 strategic skeleton
+```
+
+**Bootstrap command — agent installs everything:**
+
+```
+bootstrap mode: "Set up enforcement layer for [project]"
+→ Agent creates all 6 scripts + settings.json + package.json entries
+→ No manual file creation needed after bootstrap
+```
+
 ### Minimal CLAUDE.md
 
 ```markdown
@@ -326,15 +355,21 @@ Keep CLAUDE.md shorter by pointing to AGENTS.md for workflow details.
 }
 ```
 
-**Hook coverage after full setup:**
+**Full enforcement coverage after bootstrap:**
 
-| Hook | Script | What It Blocks |
-|------|--------|---------------|
-| `PreToolUse` (Write\|Edit) | check-status-advance.mjs | Premature CLOSED status in planning files |
-| `PreCompact` | check-session-state.mjs --print-context | Context loss without state preservation |
-| `SessionEnd` | check-session-state.mjs | Session end without valid memory files |
-| *(manual, before phase start)* | check-phase-entry.mjs --phase=N | Phase execution on unverified foundation |
-| *(manual, before any closure claim)* | check-truth-gates.mjs | False closure with forbidden patterns present |
+| Trigger | Script | Layer | What It Blocks |
+|---------|--------|-------|---------------|
+| `PreToolUse` (Write\|Edit) | check-status-advance.mjs | Hook (auto) | CLOSED written without truth-gate pass |
+| `PreCompact` | check-session-state.mjs --print-context | Hook (auto) | Context loss without state preservation |
+| `SessionEnd` | check-session-state.mjs | Hook (auto) | Session end without valid memory files |
+| `pnpm exec:phase N` | execute-phase.sh → check-phase-entry.mjs | Script (enforced) | Phase execution on unverified foundation |
+| `pnpm plan:phase N` | plan-phase.sh → `--allowedTools` | Script (enforced) | Code written during planning session |
+| `pnpm exec:phase N` with empty PHASE_ENTRY_CHECKS | check-phase-entry.mjs | Script (enforced) | Phase N starts without entry checks defined |
+| *(called by check-status-advance.mjs)* | check-truth-gates.mjs | Script (chained) | False CLOSED with forbidden patterns |
+
+**Enforcement classification with full setup: `fully enforced`**
+Without `plan-phase.sh` / `execute-phase.sh` wired: `partially enforced`
+Without hooks in settings.json: `documented only`
 
 ### Session State Check Script Skeleton
 
@@ -420,10 +455,19 @@ const PHASE_ENTRY_CHECKS = {
 
 const checks = PHASE_ENTRY_CHECKS[phase];
 if (!checks || checks.length === 0) {
-  console.warn(`ENTRY GATE WARNING: No checks defined for phase ${phase}.`);
-  console.warn(`Add checks to PHASE_ENTRY_CHECKS[${phase}] in scripts/check-phase-entry.mjs`);
-  // Do NOT silently pass — warn loudly but allow if explicitly not defined.
-  process.exit(0);
+  // Phase 1 has no predecessor — allow by default.
+  if (phase <= 1) {
+    console.log('ENTRY GATE: Phase 1 — no predecessor. PASS.');
+    process.exit(0);
+  }
+  // Phase 2+ MUST have checks. No checks = BLOCKED. This is not optional.
+  console.error(`\n╔══════════════════════════════════════════════════╗`);
+  console.error(`║  ENTRY GATE BLOCKED — Phase ${phase} checks not defined`);
+  console.error(`╚══════════════════════════════════════════════════╝`);
+  console.error(`  PHASE_ENTRY_CHECKS[${phase}] is empty.`);
+  console.error(`  You MUST define entry checks during Phase ${prevPhase} documentation (Tier 3).`);
+  console.error(`  Add checks to scripts/check-phase-entry.mjs before Phase ${phase} begins.\n`);
+  process.exit(1);
 }
 
 const failures = [];
@@ -455,19 +499,63 @@ if (failures.length > 0) {
 console.log(`ENTRY GATE PASSED — Phase ${prevPhase} verified. Phase ${phase} may begin.`);
 ```
 
-### Wiring Entry Gate
+### Wiring Entry Gate — Shell Scripts (Mandatory)
+
+Do not call `check-phase-entry.mjs` manually. Wire it into execution scripts so it cannot be skipped:
+
+**`scripts/plan-phase.sh`** — Planning lockdown. Agent can only read/write `.md` files. No code execution.
+
+```bash
+#!/usr/bin/env bash
+# Usage: ./scripts/plan-phase.sh N
+# Starts a planning session for Phase N with tool restrictions.
+# Agent MUST output: _planning/phase-N/README.md + PHASE_ENTRY_CHECKS[N+1] update.
+set -e
+PHASE=${1:?Usage: plan-phase.sh N}
+echo "Planning Phase $PHASE — tool lockdown active (Read, Write, Glob, Grep only)"
+claude \
+  --allowedTools "Read,Write,Glob,Grep" \
+  --system "You are writing Phase $PHASE documentation only.
+    Output: _planning/phase-$PHASE/README.md and subphase READMEs.
+    MANDATORY: Also update PHASE_ENTRY_CHECKS[$((PHASE+1))] in scripts/check-phase-entry.mjs.
+    Do NOT write any source code. Do NOT run any shell commands.
+    Do NOT plan Phase $((PHASE+1)) or beyond — only Phase $PHASE." \
+  "Plan Phase $PHASE per _planning/roadmap.md row $PHASE."
+```
+
+**`scripts/execute-phase.sh`** — Execution with mandatory entry gate. Cannot be bypassed.
+
+```bash
+#!/usr/bin/env bash
+# Usage: ./scripts/execute-phase.sh N
+# Runs entry gate, then starts execution session. Blocks if gate fails.
+set -e
+PHASE=${1:?Usage: execute-phase.sh N}
+echo "Running entry gate for Phase $PHASE..."
+node scripts/check-phase-entry.mjs --phase=$PHASE   # exits 1 = blocked, script stops here
+echo "Entry gate PASSED. Starting Phase $PHASE execution."
+claude "Execute Phase $PHASE per _planning/phase-$PHASE/README.md.
+  Read _memory/progress.md first. Run self-check after each task."
+```
 
 Add to `package.json`:
 ```json
-{ "scripts": { "check:phase-entry": "node scripts/check-phase-entry.mjs" } }
+{
+  "scripts": {
+    "check:phase-entry": "node scripts/check-phase-entry.mjs",
+    "plan:phase": "bash scripts/plan-phase.sh",
+    "exec:phase": "bash scripts/execute-phase.sh"
+  }
+}
 ```
 
-Add to CLAUDE.md commands:
+Usage:
 ```bash
-node scripts/check-phase-entry.mjs --phase=N   # run before Phase N starts
+pnpm plan:phase 3       # Plan Phase 3 (tool-locked session)
+pnpm exec:phase 3       # Execute Phase 3 (entry gate runs first, blocks if fail)
 ```
 
-Add PHASE_ENTRY_CHECKS for every phase during per-phase documentation (Tier 3 planning).
+**Why shell scripts instead of manual commands:** Manual commands can be skipped. Shell scripts cannot — `execute-phase.sh` calls `check-phase-entry.mjs` with `set -e`, so any failure aborts the entire script before Claude starts.
 
 ---
 
