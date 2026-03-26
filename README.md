@@ -173,7 +173,7 @@ npx skills add Alicoder001/agent-skills --skill senior
 npx skills add Alicoder001/agent-skills --skill find-skills
 npx skills add Alicoder001/agent-skills --skill project-init
 npx skills add Alicoder001/agent-skills --skill skill-update
-npx skills add Alicoder001/agent-skills --skill prompt-engineer
+npx skills add Alicoder001/agent-skills --skill agent-architect
 ```
 
 ## Categories
@@ -184,7 +184,7 @@ npx skills add Alicoder001/agent-skills --skill prompt-engineer
 - `arch`: enterprise-ddd
 - `infra`: monorepo
 - `perf`: javascript
-- `agent`: reasoning, planning, memory, tools, collaboration, deep-audit, senior, workflow, autonomous-delivery, notion-ops, find-skills, project-init, skill-update, prompt-engineer
+- `agent`: reasoning, planning, memory, tools, collaboration, deep-audit, senior, workflow, autonomous-delivery, notion-ops, find-skills, project-init, skill-update, agent-architect
 
 ## Repository Health
 

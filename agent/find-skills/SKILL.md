@@ -81,7 +81,7 @@ Single skill:
 | find-skills | Skill discovery | `npx skills add Alicoder001/agent-skills --skill find-skills` |
 | project-init | Project wizard | `npx skills add Alicoder001/agent-skills --skill project-init` |
 | skill-update | Skill versioning | `npx skills add Alicoder001/agent-skills --skill skill-update` |
-| prompt-engineer | Prompt engineering & context architecture | `npx skills add Alicoder001/agent-skills --skill prompt-engineer` |
+| agent-architect | Project architecture, verification design & agent orchestration | `npx skills add Alicoder001/agent-skills --skill agent-architect` |
 
 ## Recommended Bundles
 

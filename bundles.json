@@ -84,7 +84,7 @@
         "agent/find-skills",
         "agent/project-init",
         "agent/skill-update",
-        "agent/prompt-engineer"
+        "agent/agent-architect"
       ]
     },
     "agent-professional": {
@@ -130,7 +130,7 @@
     "agent": {
       "name": "Agent",
       "description": "AI agent behavior",
-      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "deep-audit", "senior", "workflow", "autonomous-delivery", "notion-ops", "find-skills", "project-init", "skill-update", "prompt-engineer"]
+      "skills": ["reasoning", "planning", "memory", "tools", "collaboration", "deep-audit", "senior", "workflow", "autonomous-delivery", "notion-ops", "find-skills", "project-init", "skill-update", "agent-architect"]
     }
   }
 }

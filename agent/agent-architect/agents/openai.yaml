@@ -1,0 +1,4 @@
+version: 1
+display_name: "Agent Architect"
+short_description: "Professional project architecture, context engineering, verification design, and AI agent orchestration for coding agents (Claude Code, C..."
+default_prompt: "Use this skill when: Professional project architecture, context engineering, verification design, and AI agent orchestration for coding agents (Claude Code, Codex, Cursor, Gemini CLI). Use when designing CLAUDE.md/AGENTS.md files, writing skills, building roadmaps with verification gates, bootstrapping projects for AI-assisted development, planning multi-agent pipelines, optimizing token usage, managing session handoffs, designing closure protocols, or auditing existing agent setups. Do NOT use for direct code implementation, code review, or debugging."
