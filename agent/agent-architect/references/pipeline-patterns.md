@@ -369,3 +369,94 @@ Agent runs the phase closure audit from `verification-protocol.md` §3.
 **Result:**
 - PASS → Phase marked CLOSED, next phase unlocked, status docs updated
 - FAIL → Specific remediation tasks created, phase re-entered
+
+## 14. 3-Tier Progressive Planning Pipeline
+
+The recommended approach for any project with 3+ phases. Eliminates orphaned checkboxes, cognitive overload, and false closure from upfront over-planning.
+
+**Root problem this solves:** Writing all phase detail upfront creates predictions, not plans. Predictions become fake checkboxes. Fake checkboxes become false CLOSED status. By the time Phase 6 runs, the Phase 6 plan was written based on Phase 1 assumptions — those assumptions are wrong.
+
+### The Three Tiers
+
+```
+TIER 1 — DISCOVERY (one session, before any planning)
+─────────────────────────────────────────────────────
+Goal:    Capture all truth about the project before designing anything.
+Output:  docs/SPEC.md
+What:    Project vision, full requirements, stack decision + rationale,
+         hard constraints (NEVER rules), risk profile, integrations,
+         team context, design assets.
+Rule:    No phase planning until SPEC.md is complete and reviewed.
+
+TIER 2 — STRATEGIC SKELETON (one session, after discovery)
+─────────────────────────────────────────────────────────
+Goal:    Show all phases — names, dependencies, exit criteria only.
+Output:  _planning/roadmap.md
+What:    Phase name | dependency | exit criteria (2-3 lines max per phase)
+Rule:    NO subphases. NO tasks. NO implementation detail.
+         If you're writing tasks, you're in Tier 3, not Tier 2.
+
+TIER 3 — PER-PHASE DOCUMENTATION (one session per phase, sequentially)
+────────────────────────────────────────────────────────────────────────
+Goal:    Write ONE phase's complete plan based on actual current state.
+Output:  _planning/phase-N/README.md + subphase READMEs + task cards
+What:    Subphases, tasks, iron laws, DO/DON'T, truth-gates, entry checks
+Rule:    NEVER write Tier 3 for Phase N+1 before Phase N is VERIFIED.
+         Each phase is documented one at a time, in order.
+```
+
+### Full Pipeline Sequence
+
+```
+[Session 1 — Discovery Agent]
+  Input:  User interview + existing codebase
+  Output: docs/SPEC.md
+  Rule:   Ask about constraints, risk profile, design assets — NEVER guess
+
+[Session 2 — Strategic Skeleton Agent]
+  Input:  docs/SPEC.md
+  Output: _planning/roadmap.md (skeleton only)
+  Rule:   Every phase MUST end with a Verification & Closure subphase
+          Exit criteria must be verifiable, not vague
+
+[Session 3 — Phase 1 Documentation Agent]
+  Input:  roadmap.md (reads Phase 1 row only)
+  Output: _planning/phase-1/README.md + subphase READMEs
+          Defines PHASE_ENTRY_CHECKS[2] in check-phase-entry.mjs
+  Rule:   Full detail only for Phase 1. Stop at Phase 1.
+
+[Session 4 — Phase 2 Documentation Agent]
+  Input:  roadmap.md + phase-1/README.md (context only)
+  Output: _planning/phase-2/README.md + subphase READMEs
+          Defines PHASE_ENTRY_CHECKS[3] in check-phase-entry.mjs
+  Rule:   Full detail only for Phase 2.
+
+... repeat for each phase ...
+
+[Execution — Phase N Task Executor]
+  MANDATORY FIRST STEP: node scripts/check-phase-entry.mjs --phase=N
+  If exit 0 → proceed. If exit 1 → BLOCKED. Fix previous phase first.
+  Then: Execute tasks, run self-checks, run subphase gates, run phase audit.
+```
+
+### Why Not Write All Tier 3 Upfront?
+
+| All Tier 3 upfront | Per-phase Tier 3 |
+|-------------------|-----------------|
+| Phase 6 plan written based on Phase 1 assumptions | Phase 6 plan written after Phase 5 is VERIFIED |
+| 200+ checkboxes created speculatively | 20-30 checkboxes per phase, based on reality |
+| Phase N plan is outdated before it executes | Phase N plan reflects actual current state |
+| Cognitive overload → sloppy planning | Focused session → precise planning |
+| False CLOSED from unchecked orphaned boxes | No orphaned boxes — each phase planned just before it runs |
+
+### Entry Gate as Hard Blocker
+
+The entry gate is what makes this system deterministic, not aspirational:
+
+```bash
+# This command MUST return exit 0 before Phase N begins.
+# If it exits 1, Phase N is BLOCKED — no exceptions.
+node scripts/check-phase-entry.mjs --phase=N
+```
+
+Define `PHASE_ENTRY_CHECKS[N]` during Phase N-1 documentation. Each check maps directly to Phase N-1's exit criteria — grep commands, file existence checks, import scans. If the check cannot be expressed as a command, it is not a truth-gate — it is wishful thinking.

@@ -18,6 +18,8 @@ Layer 4: Docs                         → reference material
 | Session state preservation | Layer 0 (hook) | Must fire automatically |
 | "No fake data" constraint | Layer 0 (truth-gate) + Layer 1 (reminder) | Script enforces, prompt reminds |
 | Architecture import boundaries | Layer 0 (lint rule or script) | Deterministic check |
+| Phase entry verification | Layer 0 (check-phase-entry.mjs) | Must block at script level — prompt alone fails |
+| Status advancement to CLOSED/VERIFIED | Layer 0 (check-status-advance.mjs via PreToolUse) | Agent cannot self-certify closure |
 | Module responsibility rules | Layer 1 (AGENTS.md) | Read every session, guides behavior |
 | Phase-specific DO/DON'T rules | Layer 2 (README) | Scoped to current work |
 | How to design prompts | Layer 3 (skill) | On-demand knowledge |
@@ -113,6 +115,30 @@ Inject only concise state (progress summary, current task, blockers). Never inje
   }
 }
 ```
+
+### PreToolUse — Block Premature Status Advancement
+
+Fires before every `Write` or `Edit` tool call. Reads tool input from stdin (JSON). Blocks if agent attempts to write `CLOSED` status without truth-gates passing.
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/check-status-advance.mjs"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Effect:** If `check-status-advance.mjs` exits 1, the Write/Edit is cancelled and the agent sees the error message. The agent cannot write `CLOSED` to any planning or memory file unless truth-gates pass.
 
 ### Windows Variant (PowerShell)
 
@@ -263,6 +289,17 @@ Keep CLAUDE.md shorter by pointing to AGENTS.md for workflow details.
 ```json
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/check-status-advance.mjs"
+          }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "matcher": "",
@@ -288,6 +325,16 @@ Keep CLAUDE.md shorter by pointing to AGENTS.md for workflow details.
   }
 }
 ```
+
+**Hook coverage after full setup:**
+
+| Hook | Script | What It Blocks |
+|------|--------|---------------|
+| `PreToolUse` (Write\|Edit) | check-status-advance.mjs | Premature CLOSED status in planning files |
+| `PreCompact` | check-session-state.mjs --print-context | Context loss without state preservation |
+| `SessionEnd` | check-session-state.mjs | Session end without valid memory files |
+| *(manual, before phase start)* | check-phase-entry.mjs --phase=N | Phase execution on unverified foundation |
+| *(manual, before any closure claim)* | check-truth-gates.mjs | False closure with forbidden patterns present |
 
 ### Session State Check Script Skeleton
 
@@ -333,7 +380,157 @@ console.log('SESSION STATE OK');
 - Skills NOT invoked cost ~50 tokens each (description only). A 500-line skill not needed today = 0 wasted tokens.
 - MCP servers add tool definitions to context even when idle. Each inactive MCP server wastes tokens on every message. Prefer CLI tools when available.
 
-## 9. Automation Classification
+## 9. Phase Entry Protocol
+
+The entry gate is the single most important blocker for preventing false foundations. It runs before Phase N execution begins and verifies Phase N-1's exit criteria against actual code — not roadmap claims.
+
+### check-phase-entry.mjs Skeleton
+
+```javascript
+// scripts/check-phase-entry.mjs
+// Usage: node scripts/check-phase-entry.mjs --phase=N
+// Exits 0 = PASS (Phase N may begin). Exits 1 = BLOCK (Phase N-1 not verified).
+
+import { existsSync, readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+
+const phaseArg = process.argv.find(a => a.startsWith('--phase='));
+if (!phaseArg) { console.error('Usage: node check-phase-entry.mjs --phase=N'); process.exit(1); }
+
+const phase = parseInt(phaseArg.split('=')[1]);
+const prevPhase = phase - 1;
+
+// ============================================================
+// PROJECT-SPECIFIC: Define entry checks per phase transition.
+// Each check must map directly to the previous phase's exit criteria.
+// Use grep (expectEmpty) or ls (expectNonEmpty) — deterministic only.
+// ============================================================
+const PHASE_ENTRY_CHECKS = {
+  // Example — customize per project:
+  // 3: [
+  //   { description: 'No demo data in product pages',
+  //     command: 'grep -rl "demo-data" apps/web/src/pages/',
+  //     expectEmpty: true },
+  //   { description: 'Auth endpoints exist',
+  //     command: 'ls apps/backend/src/modules/auth/interfaces/auth.controller.ts',
+  //     expectNonEmpty: true },
+  // ],
+};
+// ============================================================
+
+const checks = PHASE_ENTRY_CHECKS[phase];
+if (!checks || checks.length === 0) {
+  console.warn(`ENTRY GATE WARNING: No checks defined for phase ${phase}.`);
+  console.warn(`Add checks to PHASE_ENTRY_CHECKS[${phase}] in scripts/check-phase-entry.mjs`);
+  // Do NOT silently pass — warn loudly but allow if explicitly not defined.
+  process.exit(0);
+}
+
+const failures = [];
+for (const check of checks) {
+  try {
+    const result = execSync(check.command, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    if (check.expectEmpty && result.length > 0) {
+      failures.push(`FAIL [${check.description}]:\n    Expected empty. Found:\n    ${result.split('\n').slice(0, 5).join('\n    ')}`);
+    } else if (check.expectNonEmpty && result.length === 0) {
+      failures.push(`FAIL [${check.description}]: Expected output, got empty.`);
+    }
+  } catch {
+    // grep exits 1 when nothing found — that is a PASS for expectEmpty
+    if (!check.expectEmpty) {
+      failures.push(`FAIL [${check.description}]: Command failed or not found.`);
+    }
+  }
+}
+
+if (failures.length > 0) {
+  console.error(`\n╔══════════════════════════════════════════════════╗`);
+  console.error(`║  ENTRY GATE FAILED — Phase ${prevPhase} exit criteria NOT met`);
+  console.error(`╚══════════════════════════════════════════════════╝`);
+  failures.forEach(f => console.error(`\n  ${f}`));
+  console.error(`\n  ▶ Fix Phase ${prevPhase} violations before Phase ${phase} begins.\n`);
+  process.exit(1);
+}
+
+console.log(`ENTRY GATE PASSED — Phase ${prevPhase} verified. Phase ${phase} may begin.`);
+```
+
+### Wiring Entry Gate
+
+Add to `package.json`:
+```json
+{ "scripts": { "check:phase-entry": "node scripts/check-phase-entry.mjs" } }
+```
+
+Add to CLAUDE.md commands:
+```bash
+node scripts/check-phase-entry.mjs --phase=N   # run before Phase N starts
+```
+
+Add PHASE_ENTRY_CHECKS for every phase during per-phase documentation (Tier 3 planning).
+
+---
+
+## 10. Status Advancement Blocking
+
+Blocks the agent from writing `CLOSED` status to any planning or memory file unless truth-gates pass. Implemented as a `PreToolUse` hook that intercepts every `Write` and `Edit` call.
+
+### check-status-advance.mjs Skeleton
+
+```javascript
+// scripts/check-status-advance.mjs
+// Called by PreToolUse hook on Write|Edit.
+// Reads tool input JSON from stdin. Exits 1 to block if premature CLOSED detected.
+
+import { readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
+
+let input = '';
+try { input = readFileSync(0, 'utf8'); } catch { process.exit(0); }
+
+let toolInput;
+try { toolInput = JSON.parse(input); } catch { process.exit(0); }
+
+const content  = String(toolInput.content || toolInput.new_string || '');
+const filePath = String(toolInput.file_path || '');
+
+// Only guard planning and memory files
+const isStatusFile = /(_planning[\\/]|_memory[\\/]|HANDOFF\.md|roadmap\.md|progress\.md)/.test(filePath);
+if (!isStatusFile) process.exit(0);
+
+// Detect CLOSED being written
+const attemptsClosed = /\|\s*CLOSED\b|\bStatus:\s*CLOSED\b|\bCLOSED\b/.test(content);
+if (!attemptsClosed) process.exit(0);
+
+// CLOSED requires truth-gates to pass
+try {
+  execSync('node scripts/check-truth-gates.mjs', { stdio: 'pipe' });
+} catch {
+  console.error('\n╔══════════════════════════════════════════════════╗');
+  console.error('║  WRITE BLOCKED — Cannot mark CLOSED               ');
+  console.error('╚══════════════════════════════════════════════════╝');
+  console.error('  Truth-gate check failed. Fix violations first:');
+  console.error('  node scripts/check-truth-gates.mjs\n');
+  process.exit(1);
+}
+
+process.exit(0);
+```
+
+### What This Prevents
+
+| Scenario | Without hook | With hook |
+|----------|-------------|-----------|
+| Agent writes `CLOSED` after implementation only | Allowed — silent false closure | BLOCKED — truth-gates must pass |
+| Agent writes `CLOSED` with violations present | Allowed | BLOCKED with violation list |
+| Agent writes `CLOSED` with all gates passing | Allowed | Allowed |
+| Agent writes `IMPLEMENTED` or `VERIFIED` | Allowed | Allowed (not blocked — weaker claims) |
+
+**Note on VERIFIED:** For maximum strictness, add a similar check for `VERIFIED` that runs the subphase-specific truth-gate scan. Tune per project risk profile.
+
+---
+
+## 11. Automation Classification
 
 Use these exact labels in all assessments:
 

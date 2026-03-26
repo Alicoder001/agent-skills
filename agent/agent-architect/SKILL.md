@@ -23,6 +23,9 @@ Non-negotiable. Every mode, every project, every time.
 | 8 | **Architecture follows discovery.** Never prescribe patterns without understanding constraints. | Wrong fit |
 | 9 | **Separate planning from execution.** Planning → documents. Execution → code. | Scope creep |
 | 10 | **Memory files are compact state.** progress.md ≤ 40, todo.md ≤ 20, HANDOFF.md ≤ 50 lines. | Buried truth |
+| 11 | **Entry before execution — enforced by script.** NEVER start Phase N without `check-phase-entry.mjs --phase=N` returning exit 0. No exceptions. | Building on false foundation |
+| 12 | **Every NEVER needs a script.** Every "NEVER" rule that grep/scan can verify MUST have a Layer 0 script. No script = fiction — label it `documented only`. | Silent violations at scale |
+| 13 | **Phase detail is just-in-time.** Strategic skeleton covers all phases upfront. Full phase documentation is written one phase at a time, before that phase executes. NEVER plan all phases in full detail simultaneously. | Orphaned checkboxes, false confidence |
 
 ## Core Modes
 
@@ -31,10 +34,11 @@ Non-negotiable. Every mode, every project, every time.
 | 1 | `discover` | Deep project analysis — **MANDATORY** before `bootstrap`/`architect` on new projects | inline |
 | 2 | `bootstrap` | Generate enforcement layer: CLAUDE.md, hooks, scripts, _memory/, settings | enforcement-architecture.md §7 |
 | 3 | `architect` | Design full architecture: CLAUDE.md, AGENTS.md, roadmap, verification gates, truth-gates | enforcement-architecture.md + verification-protocol.md |
-| 4 | `session` | Optimize session continuity, tokens, compaction, handoff | session-protocol.md |
-| 5 | `pipeline` | Design multi-agent planning/execution pipelines and task cards | pipeline-patterns.md |
-| 6 | `craft` | Write or refine a specific prompt, skill, or agent definition | audit-patterns.md §1-6 |
-| 7 | `audit` | Audit existing architecture, find enforcement/verification/closure gaps | audit-patterns.md §7-9 |
+| 4 | `plan` | Execute 3-tier planning pipeline: discovery → strategic skeleton → per-phase documentation (one phase at a time, all before execution) | pipeline-patterns.md §14 |
+| 5 | `session` | Optimize session continuity, tokens, compaction, handoff | session-protocol.md |
+| 6 | `pipeline` | Design multi-agent planning/execution pipelines and task cards | pipeline-patterns.md |
+| 7 | `craft` | Write or refine a specific prompt, skill, or agent definition | audit-patterns.md §1-6 |
+| 8 | `audit` | Audit existing architecture, find enforcement/verification/closure gaps | audit-patterns.md §7-9 |
 
 ## Execution Workflow
 
@@ -66,12 +70,19 @@ Gather before designing:
 
 **Bootstrap:** Run discovery → generate enforcement layer from `enforcement-architecture.md` §7 → add truth-gates for each checkable constraint → report enforcement classification.
 
+**Plan (3-Tier Pipeline):** See `pipeline-patterns.md` §14.
+- Tier 1: Discovery → `docs/SPEC.md`
+- Tier 2: Strategic skeleton → `roadmap.md` (phase names + exit criteria only — NO tasks)
+- Tier 3: Per-phase full detail, one phase at a time, sequentially
+- Execution: `check-phase-entry.mjs --phase=N` must pass before each phase begins
+
 **Architect:**
 1. Ensure discovery is complete.
 2. Design CLAUDE.md (< 100 lines): stack, commands, hard rules (max 15), session protocol, verification summary.
 3. Design AGENTS.md (< 150 lines): roles, pipeline, iron laws, completion gates, decision log.
-4. Design roadmap: phases → subphases → tasks. Every phase ends with a **verification subphase**.
+4. Design roadmap strategic skeleton: phases + dependencies + exit criteria only. Full phase detail written per-phase via `plan` mode.
 5. Design truth-gates for the project's risk profile. See `verification-protocol.md` §4.
+6. Wire `check-phase-entry.mjs` and `check-status-advance.mjs` to hooks. See `enforcement-architecture.md` §10-11.
 
 **Verification requirements for ALL architectures:**
 - Task cards include self-check section → `verification-protocol.md` §1
@@ -92,20 +103,21 @@ For each recommendation: state WHAT, WHY (with evidence), and HOW TO VERIFY.
 
 ## Rules
 
-**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory files become history logs | duplicate rules across CLAUDE.md and AGENTS.md
+**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory files become history logs | duplicate rules across CLAUDE.md and AGENTS.md | write full detail for all phases simultaneously | start Phase N execution without entry audit script PASS | call a NEVER rule "enforced" without a Layer 0 script | skip `check-phase-entry.mjs` for any phase transition
 
-**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase as last subphase of every phase | estimate token impact of architecture decisions | simplest approach that works
+**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase as last subphase of every phase | estimate token impact of architecture decisions | simplest approach that works | 3-tier planning for new projects | entry audit script before each phase execution | script for every checkable NEVER rule | per-phase detail written one at a time
 
 ## Mode Routing
 
 1. `discover` — new project or missing critical context
-2. `bootstrap` — "set up project" or missing CLAUDE.md/_memory/
-3. `architect` — full project design (CLAUDE.md, AGENTS.md, roadmap, verification)
-4. `session` — token/compaction/handoff issues
-5. `pipeline` — multi-agent workflows, task cards
-6. `craft` — single prompt/skill/definition
-7. `audit` — review or improve existing setup
-8. Multiple modes → order: discover → audit → architect → bootstrap → craft
+2. `plan` — starting a new project from scratch (after discover)
+3. `bootstrap` — "set up project" or missing CLAUDE.md/_memory/
+4. `architect` — full project design (CLAUDE.md, AGENTS.md, roadmap, verification)
+5. `session` — token/compaction/handoff issues
+6. `pipeline` — multi-agent workflows, task cards
+7. `craft` — single prompt/skill/definition
+8. `audit` — review or improve existing setup
+9. Multiple modes → order: discover → plan → audit → architect → bootstrap → craft
 
 ## Output Contract
 
