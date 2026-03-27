@@ -9,14 +9,14 @@ description: Professional project architecture, context engineering, verificatio
 
 ## Iron Laws
 
-Non-negotiable. Every mode, every project, every time.
+Non-negotiable. Every mode, every project.
 
 | # | Law | Violation Cost |
 |---|-----|---------------|
 | 1 | **Discovery before design.** NEVER architect without understanding the project. If info is missing — ask, do not guess. | Wrong architecture, rework |
 | 2 | **Tools enforce, prompts guide.** Script-checkable rules MUST NOT live only in prompts. | Silent violations |
 | 3 | **Three verification levels.** Task self-check → Subphase gate → Phase audit. Never skip. | False closure, fake states |
-| 4 | **Three status states.** IMPLEMENTED → VERIFIED → CLOSED. "DONE" alone is forbidden. | Premature closure |
+| 4 | **Three status states.** IMPLEMENTED → VERIFIED → CLOSED. "DONE" is forbidden. | Premature closure |
 | 5 | **Adversarial before closure.** Every claim is suspect until disproven by verification. | Optimistic momentum |
 | 6 | **Roadmap tracks truth, not intent.** Status advances AFTER verification, not after implementation. | Roadmap-code drift |
 | 7 | **Context is finite and degrades.** CLAUDE.md < 100 lines (~2K tokens). Progressive disclosure. Subagents for research. Simplest approach first. | Hallucination, context rot |
@@ -26,6 +26,7 @@ Non-negotiable. Every mode, every project, every time.
 | 11 | **Entry before execution — enforced by script.** NEVER start Phase N without `check-phase-entry.mjs --phase=N` returning exit 0. No exceptions. | Building on false foundation |
 | 12 | **Every NEVER needs a script.** Every "NEVER" rule that grep/scan can verify MUST have a Layer 0 script. No script = fiction — label it `documented only`. | Silent violations at scale |
 | 13 | **Phase detail is just-in-time.** Strategic skeleton covers all phases upfront. Full phase documentation is written one phase at a time, before that phase executes. NEVER plan all phases in full detail simultaneously. | Orphaned checkboxes, false confidence |
+| 14 | **Multi-agent means shell scripts.** Codex/Cursor have no PreToolUse hook. `plan-phase.sh`, `execute-phase.sh`, `audit-phase.sh` are mandatory for any multi-agent project. See `enforcement-architecture.md §9`. | Silent CLOSED writes, broken non-Claude enforcement |
 
 ## Core Modes
 
@@ -68,21 +69,17 @@ Gather before designing:
 
 ### 3. Mode Protocols
 
-**Bootstrap:** Run discovery → generate enforcement layer from `enforcement-architecture.md` §7 → add truth-gates for each checkable constraint → report enforcement classification.
+**Bootstrap:** Discover → ask: multi-agent (Codex/Cursor)? → enforcement layer (`enforcement-architecture.md §7`) → if multi-agent: shell scripts (`§9`) → truth-gates for each constraint → report enforcement classification.
 
-**Plan (3-Tier Pipeline):** See `pipeline-patterns.md` §14.
-- Tier 1: Discovery → `docs/SPEC.md`
-- Tier 2: Strategic skeleton → `roadmap.md` (phase names + exit criteria only — NO tasks)
-- Tier 3: Per-phase full detail, one phase at a time, sequentially
-- Execution: `check-phase-entry.mjs --phase=N` must pass before each phase begins
+**Plan (3-Tier Pipeline):** See `pipeline-patterns.md §14`. Tier 1: Discovery → `docs/SPEC.md` | Tier 2: Strategic skeleton (phases + exit criteria, no tasks) | Tier 3: Per-phase detail, one at a time. Entry gate required before each phase.
 
 **Architect:**
-1. Ensure discovery is complete.
+1. Ensure discovery is done.
 2. Design CLAUDE.md (< 100 lines): stack, commands, hard rules (max 15), session protocol, verification summary.
-3. Design AGENTS.md (< 150 lines): roles, pipeline, iron laws, completion gates, decision log.
+3. Design AGENTS.md (< 150 lines): roles, pipeline, iron laws, completion gates, decision log. Include multi-agent enforcement table (Claude Code vs Codex vs other).
 4. Design roadmap strategic skeleton: phases + dependencies + exit criteria only. Full phase detail written per-phase via `plan` mode.
 5. Design truth-gates for the project's risk profile. See `verification-protocol.md` §4.
-6. Wire `check-phase-entry.mjs` and `check-status-advance.mjs` to hooks. See `enforcement-architecture.md` §10-11.
+6. Wire `check-phase-entry.mjs` and `check-status-advance.mjs` to hooks (`enforcement-architecture.md §10-11`).
 
 **Verification requirements for ALL architectures:**
 - Task cards include self-check section → `verification-protocol.md` §1
@@ -103,9 +100,9 @@ For each recommendation: state WHAT, WHY (with evidence), and HOW TO VERIFY.
 
 ## Rules
 
-**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory files become history logs | duplicate rules across CLAUDE.md and AGENTS.md | write full detail for all phases simultaneously | start Phase N execution without entry audit script PASS | call a NEVER rule "enforced" without a Layer 0 script | skip `check-phase-entry.mjs` for any phase transition
+**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory become history logs | duplicate rules across CLAUDE.md and AGENTS.md | write full detail for all phases simultaneously | start Phase N without entry script PASS | claim enforced without Layer 0 script | skip phase entry gate
 
-**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase as last subphase of every phase | estimate token impact of architecture decisions | simplest approach that works | 3-tier planning for new projects | entry audit script before each phase execution | script for every checkable NEVER rule | per-phase detail written one at a time
+**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase last in every phase | estimate token impact | simplest approach | 3-tier planning for new projects | entry gate before each phase | script for every checkable NEVER rule | per-phase detail one at a time | shell scripts for multi-agent projects | multi-agent enforcement table in AGENTS.md
 
 ## Mode Routing
 
