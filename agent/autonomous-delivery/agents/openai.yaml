@@ -1,4 +1,4 @@
 version: 1
 display_name: "Autonomous Delivery"
-short_description: "Run a coding project in an ultra strict end-to-end delivery mode. Use only when the user explicitly wants autonomous completion with mini..."
-default_prompt: "Use this skill when: Run a coding project in an ultra strict end-to-end delivery mode. Use only when the user explicitly wants autonomous completion with minimal interruption, a real phased TASKS.md board, upfront collection of blocker parameters, and continuous implementation until the project is complete or a true blocker is reached."
+short_description: "Run a coding project in ultra-strict end-to-end delivery mode. Use when the user explicitly wants autonomous completion with minimal inte..."
+default_prompt: "Use this skill when: Run a coding project in ultra-strict end-to-end delivery mode. Use when the user explicitly wants autonomous completion with minimal interruption. Detects agent-architect enforcement automatically — respects phase entry gates and IMPLEMENTED → VERIFIED → CLOSED when active; falls back to TASKS.md board for standalone projects."
