@@ -25,7 +25,7 @@ Non-negotiable. Every mode, every project.
 | 10 | **Memory files are compact state.** progress.md ≤ 40, todo.md ≤ 20, HANDOFF.md ≤ 50 lines. | Buried truth |
 | 11 | **Entry before execution — enforced by script.** NEVER start Phase N without `check-phase-entry.mjs --phase=N` returning exit 0. No exceptions. | Building on false foundation |
 | 12 | **Every NEVER needs a script.** Every "NEVER" rule that grep/scan can verify MUST have a Layer 0 script. No script = fiction — label it `documented only`. | Silent violations at scale |
-| 13 | **Phase detail is just-in-time.** Strategic skeleton covers all phases upfront. Full phase documentation is written one phase at a time, before that phase executes. NEVER plan all phases in full detail simultaneously. | Orphaned checkboxes, false confidence |
+| 13 | **Phase detail is just-in-time. Tier 2 is always upfront.** Tier 2 (roadmap skeleton — phase names + exit criteria) covers ALL phases in one session, before any execution. Tier 3 (subphase READMEs + task cards) is written ONE phase at a time, just before that phase executes. The NEVER rule applies to Tier 3 only: NEVER write Tier 3 for Phase N+1 before Phase N is VERIFIED. Refusing to write Tier 2 for all phases at once is a misapplication of this law. | Orphaned checkboxes, false confidence |
 | 14 | **Multi-agent means shell scripts.** Codex/Cursor have no PreToolUse hook. `plan-phase.sh`, `execute-phase.sh`, `audit-phase.sh` are mandatory for any multi-agent project. See `enforcement-architecture.md §9`. | Silent CLOSED writes, broken non-Claude enforcement |
 
 ## Core Modes
@@ -100,9 +100,9 @@ For each recommendation: state WHAT, WHY (with evidence), and HOW TO VERIFY.
 
 ## Rules
 
-**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | vague instructions | claim unenforced automation | advance status before verification | use "DONE" as single status | skip adversarial audit | prescribe patterns without constraints | let memory become history logs | duplicate rules across CLAUDE.md and AGENTS.md | write full detail for all phases simultaneously | start Phase N without entry script PASS | claim enforced without Layer 0 script | skip phase entry gate
+**NEVER:** design without discovery | CLAUDE.md > 100 lines without approval | script-checkable rules in prompts only | skip token budget | claim unenforced automation | advance status before verification | use "DONE" as status | skip adversarial audit | write full detail for all phases simultaneously | start Phase N without entry script PASS | claim enforced without Layer 0 script
 
-**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | "Use when…" in skill descriptions | WHY for each recommendation | distinguish documented/partially/fully enforced | phase READMEs with DO/DON'T/EXIT CHECK | verification subphase last in every phase | estimate token impact | simplest approach | 3-tier planning for new projects | entry gate before each phase | script for every checkable NEVER rule | per-phase detail one at a time | shell scripts for multi-agent projects | multi-agent enforcement table in AGENTS.md
+**ALWAYS:** discovery before design | 3-level verification in every roadmap | project-specific truth-gates | IMPLEMENTED → VERIFIED → CLOSED | WHY for each recommendation | distinguish documented/partially/fully enforced | verification subphase last in every phase | script for every checkable NEVER rule | per-phase detail one at a time | shell scripts for multi-agent projects
 
 ## Mode Routing
 
@@ -144,3 +144,4 @@ Layer 4: Docs                       → reference material
 3. [Session Protocol](references/session-protocol.md)
 4. [Pipeline Patterns](references/pipeline-patterns.md)
 5. [Audit Patterns](references/audit-patterns.md)
+6. [Role Pipeline](references/role-pipeline.md)

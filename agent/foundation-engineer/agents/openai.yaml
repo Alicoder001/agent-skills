@@ -1,0 +1,4 @@
+version: 1
+display_name: "Foundation Engineer"
+short_description: "Project foundation, enforcement layer, standards, and skeleton builder. Use AFTER Architect delivers SPEC.md + roadmap.md and BEFORE any ..."
+default_prompt: "Use this skill when: Project foundation, enforcement layer, standards, and skeleton builder. Use AFTER Architect delivers SPEC.md + roadmap.md and BEFORE any executor starts. Creates all enforcement scripts, standards.json, project skeleton, base code patterns, and Phase 1 task cards. NEVER implements business features. Any model can play this role."

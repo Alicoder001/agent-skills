@@ -1,0 +1,4 @@
+version: 1
+display_name: "Auditor"
+short_description: "Independent validation layer for AI-assisted development. Use after Executor claims subphase or phase completion. Runs truth-gate scripts..."
+default_prompt: "Use this skill when: Independent validation layer for AI-assisted development. Use after Executor claims subphase or phase completion. Runs truth-gate scripts, adversarial audit, and delivers VERIFIED (subphase) or CLOSED (phase) verdict with structured audit report. The ONLY role with CLOSED authority. NEVER executes tasks. Any model can play this role — but NEVER the model that executed the tasks being audited."

@@ -376,6 +376,23 @@ The recommended approach for any project with 3+ phases. Eliminates orphaned che
 
 **Root problem this solves:** Writing all phase detail upfront creates predictions, not plans. Predictions become fake checkboxes. Fake checkboxes become false CLOSED status. By the time Phase 6 runs, the Phase 6 plan was written based on Phase 1 assumptions — those assumptions are wrong.
 
+### ⚠️ Common Misreading — Read Before Continuing
+
+> "The just-in-time rule means I can't plan any phase until the previous one is CLOSED."
+
+**This is wrong.** The just-in-time rule applies to Tier 3 ONLY.
+
+| Tier | Scope | When written | Rule |
+|------|-------|-------------|------|
+| Tier 2 (roadmap skeleton) | ALL phases | ONCE, before any execution | Write all phases upfront — this is the point |
+| Tier 3 (phase detail) | ONE phase | Just before that phase executes | NEVER write Phase N+1 detail before Phase N is VERIFIED |
+
+If an agent refuses to write `roadmap.md` for all phases because "Phase 1 isn't CLOSED yet" — that agent has misread this rule.
+The roadmap skeleton is written in a single planning session before any code is written.
+The restriction is on detailed subphase READMEs and task cards — not the roadmap.
+
+---
+
 ### The Three Tiers
 
 ```
@@ -390,19 +407,23 @@ Rule:    No phase planning until SPEC.md is complete and reviewed.
 
 TIER 2 — STRATEGIC SKELETON (one session, after discovery)
 ─────────────────────────────────────────────────────────
-Goal:    Show all phases — names, dependencies, exit criteria only.
+Goal:    Show ALL phases — names, dependencies, exit criteria only.
 Output:  _planning/roadmap.md
+When:    BEFORE any execution. All phases written at once. No waiting.
 What:    Phase name | dependency | exit criteria (2-3 lines max per phase)
 Rule:    NO subphases. NO tasks. NO implementation detail.
          If you're writing tasks, you're in Tier 3, not Tier 2.
+NOT:     "I'll write Phase 2 row after Phase 1 is done." — Wrong. Write all rows now.
 
 TIER 3 — PER-PHASE DOCUMENTATION (one session per phase, sequentially)
 ────────────────────────────────────────────────────────────────────────
 Goal:    Write ONE phase's complete plan based on actual current state.
 Output:  _planning/phase-N/README.md + subphase READMEs + task cards
+When:    Just before Phase N executes — after Phase N-1 is VERIFIED.
 What:    Subphases, tasks, iron laws, DO/DON'T, truth-gates, entry checks
 Rule:    NEVER write Tier 3 for Phase N+1 before Phase N is VERIFIED.
          Each phase is documented one at a time, in order.
+NOT:     This rule does NOT apply to Tier 2. The roadmap is always written upfront.
 ```
 
 ### Full Pipeline Sequence

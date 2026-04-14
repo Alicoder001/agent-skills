@@ -82,6 +82,9 @@ Single skill:
 | project-init | Project wizard | `npx skills add Alicoder001/agent-skills --skill project-init` |
 | skill-update | Skill versioning | `npx skills add Alicoder001/agent-skills --skill skill-update` |
 | agent-architect | Project architecture, verification design & agent orchestration | `npx skills add Alicoder001/agent-skills --skill agent-architect` |
+| foundation-engineer | Low-level engineering patterns | `npx skills add Alicoder001/agent-skills --skill foundation-engineer` |
+| auditor | Audit agent behavior and outputs | `npx skills add Alicoder001/agent-skills --skill auditor` |
+| task-manager | Multi-task intake, decompose, and dispatch | `npx skills add Alicoder001/agent-skills --skill task-manager` |
 
 ## Recommended Bundles
 

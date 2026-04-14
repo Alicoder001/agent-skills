@@ -1,0 +1,4 @@
+version: 1
+display_name: "Task Manager"
+short_description: "Task intake, decomposition, and agent dispatch. Use when the user sends multiple tasks at once and you need to analyze, group, assign to ..."
+default_prompt: "Use this skill when: Task intake, decomposition, and agent dispatch. Use when the user sends multiple tasks at once and you need to analyze, group, assign to isolated agents, set priorities, and create tasks.md. This is the entry point for all multi-task sessions."
